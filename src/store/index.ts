@@ -1,6 +1,7 @@
 import { createDirectStore } from "direct-vuex";
 import firebaseModule from "@/store/firebaseModule";
 import signInModule from "@/store/signInModule";
+import signUpModule from "@/store/signUpModule";
 import toastModule from "@/store/toastModule";
 
 const {
@@ -17,6 +18,7 @@ const {
   modules: {
     firebase: firebaseModule,
     signIn: signInModule,
+    signUp: signUpModule,
     toast: toastModule,
   },
 });
