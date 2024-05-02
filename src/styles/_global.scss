@@ -1,0 +1,22 @@
+@import "@/styles/vars";
+@import "@/styles/templates";
+@import "@/styles/mixins";
+
+// Global container of whole page
+.global-container {
+  position: relative;
+  padding: 10px;
+  min-height: 100vh;
+  max-width: 1920px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: $color-global-bg;
+}
+
+// Class which is needed to disable links while loading anything
+.disabled-link {
+  pointer-events: none;
+  filter: grayscale(50%);
+}

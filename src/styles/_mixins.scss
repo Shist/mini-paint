@@ -1,0 +1,46 @@
+@import "@/styles/vars";
+
+// Default settings of headlines, you only need to choose font size, line height and text color
+@mixin default-headline($font-size, $line-height, $text-color) {
+  padding: 8px;
+  font-family: "Roboto";
+  font-weight: 700;
+  font-size: $font-size;
+  line-height: $line-height;
+  color: $text-color;
+}
+
+// Default settings of paragraphs and spans, you only need to choose font size, line height and text color
+@mixin default-text($font-size, $line-height, $text-color) {
+  padding: 4px;
+  font-family: "Roboto";
+  font-weight: 400;
+  font-size: $font-size;
+  line-height: $line-height;
+  color: $text-color;
+}
+
+// Default settings of buttons, you only need to choose max-width, text-color and bg-color
+@mixin default-btn($max-width, $text-color, $bg-color) {
+  max-width: $max-width;
+  width: 100%;
+  padding: 15px;
+  font-family: $font-roboto;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 16px;
+  text-align: center;
+  color: $text-color;
+  background-color: $bg-color;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    transform: scale(1.05);
+  }
+  &:disabled {
+    transform: none;
+    filter: grayscale(50%);
+  }
+}
