@@ -1,18 +1,16 @@
 <template>
   <div class="main-page">
-    <some-component />
+    <burger-menu />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import SomeComponent from "@/components/SomeComponent.vue";
+import BurgerMenu from "@/components/BurgerMenu.vue";
 
 export default defineComponent({
   name: "main-page",
-  components: {
-    SomeComponent,
-  },
+  components: { BurgerMenu },
 });
 </script>
 

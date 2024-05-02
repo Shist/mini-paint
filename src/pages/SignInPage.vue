@@ -1,5 +1,6 @@
 <template>
   <div class="sign-in-page">
+    <burger-menu />
     <form action="#" class="sign-in-page__form">
       <h2 class="sign-in-page__headline">Sign In</h2>
       <label class="sign-in-page__email-input-label" for="emailInput">
@@ -51,12 +52,14 @@
 import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import BurgerMenu from "@/components/BurgerMenu.vue";
 import useToast from "@/hooks/useToast";
 import useFirebaseErrorMsg from "@/hooks/useFirebaseErrorMsg";
 import { ISignInState } from "@/store/signInModule";
 
 export default defineComponent({
   name: "sign-in-page",
+  components: { BurgerMenu },
   setup() {
     const store = useStore();
     const router = useRouter();

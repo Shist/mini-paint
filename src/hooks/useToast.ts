@@ -7,8 +7,8 @@ export default function useToast() {
   const store = useStore();
 
   const currToastId = computed(() => store.state.toast.currToastId);
-  const setCurrToastId = (payload: IToastState["currToastId"]) => {
-    store.commit("toast/setCurrToastId", payload);
+  const setCurrToastId = (newValue: IToastState["currToastId"]) => {
+    store.commit("toast/setCurrToastId", newValue);
   };
 
   const removeCurrToast = () => {

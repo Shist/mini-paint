@@ -1,12 +1,16 @@
 <template>
-  <div class="new-painting-page">New Painting Page</div>
+  <div class="new-painting-page">
+    <burger-menu />
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import BurgerMenu from "@/components/BurgerMenu.vue";
 
 export default defineComponent({
   name: "new-painting-page",
+  components: { BurgerMenu },
 });
 </script>
 
