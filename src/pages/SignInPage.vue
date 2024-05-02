@@ -3,10 +3,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onMounted } from "vue";
+import useToast from "@/hooks/useToast";
 
 export default defineComponent({
   name: "sign-in-page",
+  setup() {
+    const { setSuccessToast } = useToast();
+
+    onMounted(() => {
+      setSuccessToast("Testing of 1st hook...");
+    });
+  },
 });
 </script>
 

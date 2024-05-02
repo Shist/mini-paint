@@ -1,5 +1,6 @@
 import { createDirectStore } from "direct-vuex";
 import firebaseModule from "@/store/firebaseModule";
+import toastModule from "@/store/toastModule";
 
 const {
   store,
@@ -12,7 +13,7 @@ const {
   getters: {},
   mutations: {},
   actions: {},
-  modules: { firebase: firebaseModule },
+  modules: { firebase: firebaseModule, toast: toastModule },
 });
 
 export default store;
