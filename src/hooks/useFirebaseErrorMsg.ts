@@ -1,7 +1,9 @@
-import { AuthError } from "firebase/auth";
+export interface IFirebaseError extends Error {
+  code: string;
+}
 
 export default function useFirebaseErrorMsg() {
-  const getErrorMsg = (error: AuthError | Error) => {
+  const getErrorMsg = (error: IFirebaseError | Error) => {
     if (!("code" in error)) {
       return error.message;
     }

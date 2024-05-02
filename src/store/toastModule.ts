@@ -1,7 +1,7 @@
 import { defineModule } from "direct-vuex";
 import { Id } from "vue3-toastify";
 
-interface IToastState {
+export interface IToastState {
   currToastId: Id | null;
 }
 
@@ -20,5 +20,3 @@ const toastModule = defineModule({
 });
 
 export default toastModule;
-
-export { IToastState };

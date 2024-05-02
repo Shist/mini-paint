@@ -1,11 +1,13 @@
 import { defineModule } from "direct-vuex";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { ISignInState } from "@/store/signInModule";
 
-interface firebaseState {
+export interface IFirebaseState {
   userUid: string | null;
 }
 
 const firebaseModule = defineModule({
-  state: (): firebaseState => ({
+  state: (): IFirebaseState => ({
     userUid: null,
   }),
   getters: {},
@@ -14,7 +16,12 @@ const firebaseModule = defineModule({
       state.userUid = userUid;
     },
   },
-  actions: {},
+  actions: {
+    async signInUser(context, { email, password }: ISignInState) {
+      const auth = getAuth();
+      await signInWithEmailAndPassword(auth, email, password);
+    },
+  },
   namespaced: true,
 });
 

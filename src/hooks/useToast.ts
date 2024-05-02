@@ -1,6 +1,6 @@
 import { computed } from "vue";
-import { toast } from "vue3-toastify";
 import { useStore } from "vuex";
+import { toast } from "vue3-toastify";
 import { IToastState } from "@/store/toastModule";
 
 export default function useToast() {
