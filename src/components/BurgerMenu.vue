@@ -41,7 +41,7 @@
           class="burger-menu__github-link"
         >
           <img
-            src="@/assets/icons/github.png"
+            src="@/assets/images/github.png"
             alt="GitHub"
             class="burger-menu__github-img"
           />
@@ -119,8 +119,7 @@ export default defineComponent({
   width: 40px;
   height: 40px;
   border: none;
-  background: transparent url("@/assets/icons/burger-btn.svg") no-repeat center /
-    cover;
+  background: transparent var(--burger-menu-btn-img) no-repeat center / cover;
   cursor: pointer;
   transition: 0.3s;
   &:hover {
@@ -136,7 +135,7 @@ export default defineComponent({
   min-height: 100dvh;
   display: flex;
   justify-content: flex-end;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(var(--color-burger-menu-back-bg-rgb), 0.5);
   &__nav {
     position: relative;
     max-width: 70%;
@@ -144,7 +143,7 @@ export default defineComponent({
     padding: 30px;
     display: flex;
     flex-direction: column;
-    background-color: $color-black;
+    background-color: var(--color-burger-menu-bg);
     @media (max-width: $tablet-l) {
       padding: 20px;
     }
@@ -158,7 +157,7 @@ export default defineComponent({
       flex-direction: column;
       row-gap: 10px;
       .burger-menu__curr-acc-label {
-        @include default-headline(32px, 32px, $color-white);
+        @include default-headline(32px, 32px, var(--color-burger-menu-text));
         @media (max-width: $tablet-l) {
           font-size: 20px;
           line-height: 20px;
@@ -169,14 +168,14 @@ export default defineComponent({
         align-items: baseline;
         column-gap: 5px;
         .burger-menu__email-label {
-          @include default-text(28px, 28px, $color-white);
+          @include default-text(28px, 28px, var(--color-burger-menu-text));
           @media (max-width: $tablet-l) {
             font-size: 20px;
             line-height: 20px;
           }
         }
         .burger-menu__email-value {
-          @include default-text(28px, 28px, $color-white);
+          @include default-text(28px, 28px, var(--color-burger-menu-text));
           overflow: hidden;
           text-overflow: ellipsis;
           text-wrap: nowrap;
@@ -195,14 +194,14 @@ export default defineComponent({
         align-items: baseline;
         column-gap: 5px;
         .burger-menu__name-label {
-          @include default-text(28px, 28px, $color-white);
+          @include default-text(28px, 28px, var(--color-burger-menu-text));
           @media (max-width: $tablet-l) {
             font-size: 20px;
             line-height: 20px;
           }
         }
         .burger-menu__name-value {
-          @include default-text(28px, 28px, $color-white);
+          @include default-text(28px, 28px, var(--color-burger-menu-text));
           overflow: hidden;
           text-overflow: ellipsis;
           text-wrap: nowrap;
@@ -218,7 +217,7 @@ export default defineComponent({
       }
     }
     .burger-menu__headline {
-      @include default-headline(48px, 48px, $color-white);
+      @include default-headline(48px, 48px, var(--color-burger-menu-text));
       margin-bottom: 20px;
       text-align: center;
     }
@@ -233,22 +232,22 @@ export default defineComponent({
       row-gap: 10px;
       .burger-menu__nav-list-item {
         padding: 20px;
-        border: 3px solid $color-white;
+        border: 3px solid var(--color-burger-menu-link-borders);
         border-radius: 10px;
         cursor: pointer;
         transition: 0.3s;
         &:hover {
           transform: scale(1.2);
-          border: 3px solid $color-yellow;
+          border: 3px solid var(--color-burger-menu-link);
           .burger-menu__link {
-            color: $color-yellow;
+            color: var(--color-burger-menu-link);
           }
         }
         @media (max-width: $phone-l) {
           padding: 15px;
         }
         .burger-menu__link {
-          @include default-text(36px, 36px, $color-white);
+          @include default-text(36px, 36px, var(--color-burger-menu-text));
           text-decoration: none;
           transition: 0.3s;
           @media (max-width: $phone-l) {
@@ -266,16 +265,16 @@ export default defineComponent({
       justify-content: center;
       align-items: center;
       column-gap: 5px;
-      border: 3px solid $color-white;
+      border: 3px solid var(--color-burger-menu-link-borders);
       border-radius: 10px;
       text-decoration: none;
       cursor: pointer;
       transition: 0.3s;
       &:hover {
         transform: scale(1.1);
-      }
-      &:hover > .burger-menu__github-label {
-        color: $color-link-active;
+        .burger-menu__github-label {
+          color: var(--color-burger-menu-link);
+        }
       }
       @media (max-width: $phone-l) {
         padding: 10px;
@@ -287,7 +286,7 @@ export default defineComponent({
       }
       .burger-menu__github-label {
         transition: 0.3s;
-        @include default-text(20px, 20px, $color-white);
+        @include default-text(20px, 20px, var(--color-burger-menu-text));
         @media (max-width: $tablet-l) {
           font-size: 16px;
           line-height: 16px;

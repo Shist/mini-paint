@@ -17,5 +17,8 @@ components.forEach((component) => {
 app
   .use(router)
   .use(store.original)
-  .use(Vue3Toasity, { clearOnUrlChange: false })
+  .use(Vue3Toasity, {
+    clearOnUrlChange: false,
+    theme: store.state.theme,
+  })
   .mount("#app");

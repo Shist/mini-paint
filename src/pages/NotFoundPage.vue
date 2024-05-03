@@ -25,10 +25,10 @@ export default defineComponent({
   align-items: flex-start;
   row-gap: 20px;
   &__headline {
-    @include default-headline(48px, 48px, $color-black);
+    @include default-headline(48px, 48px, var(--color-text));
   }
   &__link-to-main {
-    @include default-text(36px, 36px, $color-black);
+    @include default-text(36px, 36px, var(--color-text));
     transition: 0.3s;
     &:hover {
       transform: scale(1.05);

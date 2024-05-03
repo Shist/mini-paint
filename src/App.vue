@@ -1,13 +1,23 @@
 <template>
-  <div class="global-container">
+  <div class="global-container" :class="{ 'dark-theme': theme === 'dark' }">
     <router-view />
   </div>
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent, computed } from "vue";
+import { useStore } from "vuex";
+
+export default defineComponent({
   name: "app",
-};
+  setup() {
+    const store = useStore();
+
+    const theme = computed(() => store.state.theme);
+
+    return { theme };
+  },
+});
 </script>
 
 <style lang="scss">

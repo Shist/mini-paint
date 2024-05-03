@@ -42,5 +42,6 @@
   &:disabled {
     transform: none;
     filter: grayscale(50%);
+    cursor: default;
   }
 }

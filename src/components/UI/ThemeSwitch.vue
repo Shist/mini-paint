@@ -1,7 +1,7 @@
 <template>
   <div class="theme-switch">
     <img
-      src="@/assets/icons/light-dark-theme.svg"
+      src="@/assets/images/light-dark-theme.png"
       alt="Switch theme"
       class="theme-switch__icon"
     />
@@ -10,8 +10,8 @@
         type="checkbox"
         class="theme-switch__input"
         id="theme-switch"
-        :checked="darkTheme"
-        @change="darkTheme ? setDarkTheme(false) : setDarkTheme(true)"
+        :checked="theme === 'dark'"
+        @change="theme === 'dark' ? setTheme('light') : setTheme('dark')"
       />
       <div class="theme-switch__slider"></div>
     </label>
@@ -28,12 +28,12 @@ export default defineComponent({
   setup() {
     const store = useStore();
 
-    const darkTheme = computed(() => store.state.darkTheme);
-    const setDarkTheme = (newValue: IMainStoreState["darkTheme"]) => {
-      store.commit("setDarkTheme", newValue);
+    const theme = computed(() => store.state.theme);
+    const setTheme = (newValue: IMainStoreState["theme"]) => {
+      store.commit("setTheme", newValue);
     };
 
-    return { darkTheme, setDarkTheme };
+    return { theme, setTheme };
   },
 });
 </script>
@@ -57,7 +57,7 @@ export default defineComponent({
     .theme-switch__input {
       display: none;
       &:checked + .theme-switch__slider {
-        background-color: $color-light-black;
+        background-color: var(--color-theme-slider-dark);
       }
       &:checked + .theme-switch__slider:before {
         transform: translateX(26px);
@@ -70,7 +70,7 @@ export default defineComponent({
       right: 0;
       top: 0;
       cursor: pointer;
-      background-color: $color-light-gray;
+      background-color: var(--color-theme-slider-light);
       border-radius: 34px;
       transition: 0.4s;
       &::before {
@@ -80,7 +80,7 @@ export default defineComponent({
         position: absolute;
         bottom: 4px;
         left: 4px;
-        background-color: $color-white;
+        background-color: var(--color-theme-slider-circle);
         border-radius: 50%;
         transition: 0.4s;
       }

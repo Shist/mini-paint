@@ -2,6 +2,62 @@
 @import "@/styles/templates";
 @import "@/styles/mixins";
 
+// Global variables of the app
+:root {
+  color-scheme: light;
+
+  --color-global-bg: #ececec;
+  --color-wrapper-bg: #ffffff;
+
+  --color-text: #000000;
+  --color-input-bg: #ffffff;
+  --color-input-borders: #000000;
+  --color-placeholder: #777777;
+
+  --color-btn-text: #ffffff;
+  --color-btn-bg: #ff611a;
+
+  --burger-menu-btn-img: url("@/assets/icons/burger-btn-black.svg");
+  --color-burger-menu-bg: #ffffff;
+  --color-burger-menu-text: #000000;
+  --color-burger-menu-link-borders: #000000;
+  --color-burger-menu-link: #c49500;
+  --color-burger-menu-back-bg-rgb: 0, 0, 0;
+
+  --color-toast-bg: #ffffff;
+  --color-toast-text: #000000;
+
+  --color-theme-slider-dark: #2b2b2b;
+  --color-theme-slider-light: #cccccc;
+  --color-theme-slider-circle: #ffffff;
+
+  --color-success: #80ff80;
+  --color-error: #ff4040;
+}
+
+// Class for dark theme colors
+.dark-theme {
+  color-scheme: dark;
+
+  --color-global-bg: #313131;
+  --color-wrapper-bg: #000000;
+
+  --color-text: #ffffff;
+  --color-input-bg: #000000;
+  --color-input-borders: #ffffff;
+  --color-placeholder: #999999;
+
+  --burger-menu-btn-img: url("@/assets/icons/burger-btn-white.svg");
+  --color-burger-menu-bg: #000000;
+  --color-burger-menu-text: #ffffff;
+  --color-burger-menu-link-borders: #ffffff;
+  --color-burger-menu-link: #f7c832;
+  --color-burger-menu-back-bg-rgb: 255, 255, 255;
+
+  --color-toast-bg: #000000;
+  --color-toast-text: #ffffff;
+}
+
 // Global container of whole page
 .global-container {
   position: relative;
@@ -12,7 +68,7 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  background-color: $color-global-bg;
+  background-color: var(--color-global-bg);
 }
 
 // Class which is needed to disable links while loading anything

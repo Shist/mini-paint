@@ -4,9 +4,10 @@ import firebaseModule from "@/store/firebaseModule";
 import signInModule from "@/store/signInModule";
 import signUpModule from "@/store/signUpModule";
 import toastModule from "@/store/toastModule";
+import { updateGlobalOptions } from "vue3-toastify";
 
 export interface IMainStoreState {
-  darkTheme: boolean;
+  theme: "light" | "dark";
 }
 
 const {
@@ -17,13 +18,14 @@ const {
   moduleGetterContext,
 } = createDirectStore({
   state: (): IMainStoreState => ({
-    darkTheme: localStorage.getItem("theme") === "dark",
+    theme: localStorage.getItem("theme") === "dark" ? "dark" : "light",
   }),
   getters: {},
   mutations: {
-    setDarkTheme(state, darkTheme: boolean) {
-      state.darkTheme = darkTheme;
-      localStorage.setItem("theme", darkTheme ? "dark" : "light");
+    setTheme(state, theme: "light" | "dark") {
+      state.theme = theme;
+      localStorage.setItem("theme", theme);
+      updateGlobalOptions({ theme });
     },
   },
   actions: {},

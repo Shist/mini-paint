@@ -129,12 +129,12 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     .sign-in-page__headline {
-      @include default-headline(42px, 42px, $color-black);
+      @include default-headline(42px, 42px, var(--color-text));
       margin-bottom: 30px;
       text-align: center;
     }
     .sign-in-page__email-input-label {
-      @include default-text(24px, 24px, $color-black);
+      @include default-text(24px, 24px, var(--color-text));
       @media (max-width: $phone-l) {
         font-size: 20px;
         line-height: 20px;
@@ -145,7 +145,7 @@ export default defineComponent({
       margin-bottom: 20px;
     }
     .sign-in-page__password-input-label {
-      @include default-text(24px, 24px, $color-black);
+      @include default-text(24px, 24px, var(--color-text));
       @media (max-width: $phone-l) {
         font-size: 20px;
         line-height: 20px;
@@ -156,16 +156,16 @@ export default defineComponent({
       margin-bottom: 40px;
     }
     .sign-in-page__confirm-btn {
-      @include default-btn(300px, $color-white, $color-orange);
+      @include default-btn(300px, var(--color-btn-text), var(--color-btn-bg));
       margin-bottom: 20px;
     }
   }
   &__sign-up-suggestion-headline {
-    @include default-text(20px, 20px, $color-black);
+    @include default-text(20px, 20px, var(--color-text));
     margin-bottom: 5px;
   }
   &__sign-up-btn {
-    @include default-btn(100px, $color-white, $color-orange);
+    @include default-btn(100px, var(--color-btn-text), var(--color-btn-bg));
     text-decoration: none;
   }
 }
