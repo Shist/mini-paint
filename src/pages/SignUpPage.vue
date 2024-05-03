@@ -135,7 +135,7 @@ export default defineComponent({
     const signUpUser = async (
       payload: Omit<ISignUpState, "repeatPassword">
     ) => {
-      store.dispatch("firebase/signUpUser", payload);
+      return store.dispatch("firebase/signUpUser", payload);
     };
 
     const { getValidationError } = useValidationErrorMsg({

@@ -16,10 +16,10 @@ export interface IFirebaseState {
   userPaintings: object[] | null;
 }
 
-const USERS = "todo: add firebase collection name from env file";
-const NAME = "todo: add firebase field with name of user from env file";
-const PAINTINGS_LIST =
-  "todo: add firebase field with list of user paintings value from env file";
+const USERS = process.env.VUE_APP_FIREBASE_COLLECTION;
+const EMAIL = process.env.VUE_APP_FIREBASE_FIELD_EMAIL;
+const NAME = process.env.VUE_APP_FIREBASE_FIELD_NAME;
+const PAINTINGS_LIST = process.env.VUE_APP_FIREBASE_FIELD_PAINTINGS_LIST;
 
 const firebaseModule = defineModule({
   state: (): IFirebaseState => ({
@@ -53,6 +53,7 @@ const firebaseModule = defineModule({
 
       const db = getFirestore();
       await setDoc(doc(db, USERS, state.userUid), {
+        [EMAIL]: email,
         [NAME]: name,
         [PAINTINGS_LIST]: [],
       });

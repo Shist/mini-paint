@@ -87,7 +87,7 @@ export default defineComponent({
     });
 
     const signInUser = async (payload: ISignInState) => {
-      store.dispatch("firebase/signInUser", payload);
+      return store.dispatch("firebase/signInUser", payload);
     };
 
     const onConfirmBtnClicked = async () => {

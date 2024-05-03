@@ -25,7 +25,7 @@ const {
     setTheme(state, theme: "light" | "dark") {
       state.theme = theme;
       localStorage.setItem("theme", theme);
-      updateGlobalOptions({ theme });
+      updateGlobalOptions({ clearOnUrlChange: false, theme });
     },
   },
   actions: {},

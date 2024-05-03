@@ -80,7 +80,7 @@ export default defineComponent({
     const userName = computed(() => store.state.firebase.userName);
 
     const signOutUser = async () => {
-      store.dispatch("firebase/signOutUser");
+      return store.dispatch("firebase/signOutUser");
     };
 
     const onLogOutBtnClicked = async () => {
