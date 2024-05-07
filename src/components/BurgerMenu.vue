@@ -58,8 +58,9 @@
 import { defineComponent, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import useToast from "@/hooks/useToast";
-import useFirebaseErrorMsg from "@/hooks/useFirebaseErrorMsg";
+import useToast from "@/composables/useToast";
+import useFirebaseErrorMsg from "@/composables/useFirebaseErrorMsg";
+import { signOutUser } from "@/services/firebase";
 import { IBurgerMenuState } from "@/store/burgerMenuModule";
 
 export default defineComponent({
@@ -76,12 +77,8 @@ export default defineComponent({
       store.commit("burgerMenu/setMenuIsOpened", newValue);
     };
 
-    const userEmail = computed(() => store.state.firebase.userEmail);
-    const userName = computed(() => store.state.firebase.userName);
-
-    const signOutUser = async () => {
-      return store.dispatch("firebase/signOutUser");
-    };
+    const userEmail = computed(() => store.state.userData.userEmail);
+    const userName = computed(() => store.state.userData.userName);
 
     const onLogOutBtnClicked = async () => {
       try {

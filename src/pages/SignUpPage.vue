@@ -80,9 +80,10 @@ import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import BurgerMenu from "@/components/BurgerMenu.vue";
-import useToast from "@/hooks/useToast";
-import useFirebaseErrorMsg from "@/hooks/useFirebaseErrorMsg";
-import useValidationErrorMsg from "@/hooks/useValidationErrorMsg";
+import useToast from "@/composables/useToast";
+import useFirebaseErrorMsg from "@/composables/useFirebaseErrorMsg";
+import useValidationErrorMsg from "@/composables/useValidationErrorMsg";
+import { signUpUser } from "@/services/firebase";
 import { ISignUpState } from "@/store/signUpModule";
 
 export default defineComponent({
@@ -132,12 +133,6 @@ export default defineComponent({
       },
     });
 
-    const signUpUser = async (
-      payload: Omit<ISignUpState, "repeatPassword">
-    ) => {
-      return store.dispatch("firebase/signUpUser", payload);
-    };
-
     const { getValidationError } = useValidationErrorMsg({
       email,
       name,
@@ -154,11 +149,7 @@ export default defineComponent({
       isLoading.value = true;
       setLoadingToast("Registering an account...");
       try {
-        await signUpUser({
-          email: email.value,
-          name: name.value,
-          password: password.value,
-        });
+        await signUpUser(email.value, name.value, password.value);
         setSuccessToast("Your account has been successfully registered!");
         email.value = "";
         name.value = "";

@@ -53,8 +53,9 @@ import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import BurgerMenu from "@/components/BurgerMenu.vue";
-import useToast from "@/hooks/useToast";
-import useFirebaseErrorMsg from "@/hooks/useFirebaseErrorMsg";
+import useToast from "@/composables/useToast";
+import useFirebaseErrorMsg from "@/composables/useFirebaseErrorMsg";
+import { signInUser } from "@/services/firebase";
 import { ISignInState } from "@/store/signInModule";
 
 export default defineComponent({
@@ -86,15 +87,11 @@ export default defineComponent({
       },
     });
 
-    const signInUser = async (payload: ISignInState) => {
-      return store.dispatch("firebase/signInUser", payload);
-    };
-
     const onConfirmBtnClicked = async () => {
       isLoading.value = true;
       setLoadingToast("Logging...");
       try {
-        await signInUser({ email: email.value, password: password.value });
+        await signInUser(email.value, password.value);
         setSuccessToast("You have successfully logged in!");
         email.value = "";
         password.value = "";

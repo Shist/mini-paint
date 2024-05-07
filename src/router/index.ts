@@ -40,7 +40,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const userUid = store.state.firebase.userUid;
+  const userUid = store.state.userData.userUid;
 
   if (to.meta.requiresAuth) {
     !userUid ? next("/sign-in") : next();

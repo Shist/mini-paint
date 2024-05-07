@@ -3,25 +3,14 @@ import App from "@/App.vue";
 import components from "@/components/UI";
 import router from "@/router";
 import store from "@/store";
-import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { User } from "firebase/auth";
+import { onFirebaseAuthStateChanged } from "@/services/firebase";
 import Vue3Toasity from "vue3-toastify";
 import "@/styles/reset.css";
 
-const firebaseApp = initializeApp({
-  apiKey: process.env.VUE_APP_API_KEY,
-  authDomain: process.env.VUE_APP_AUTH_DOMAIN,
-  projectId: process.env.VUE_APP_PROJECT_ID,
-  storageBucket: process.env.VUE_APP_STORAGE_BUCKET,
-  messagingSenderId: process.env.VUE_APP_MESSAGING_SENDER_ID,
-  appId: process.env.VUE_APP_APP_ID,
-  measurementId: process.env.VUE_APP_MEASUREMENT_ID,
-});
-
 let app: IApp | null = null;
 
-const auth = getAuth(firebaseApp);
-onAuthStateChanged(auth, (user) => {
+onFirebaseAuthStateChanged((user: User | null) => {
   if (!app) {
     app = createApp(App);
 
@@ -41,6 +30,6 @@ onAuthStateChanged(auth, (user) => {
       .mount("#app");
   }
 
-  store.original.commit("firebase/setUserUid", user ? user.uid : null);
-  store.original.commit("firebase/setUserEmail", user ? user.email : null);
+  store.original.commit("userData/setUserUid", user ? user.uid : null);
+  store.original.commit("userData/setUserEmail", user ? user.email : null);
 });
