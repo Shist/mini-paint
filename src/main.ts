@@ -4,7 +4,10 @@ import components from "@/components/UI";
 import router from "@/router";
 import store from "@/store";
 import { User } from "firebase/auth";
-import { onFirebaseAuthStateChanged } from "@/services/firebase";
+import {
+  onFirebaseAuthStateChanged,
+  loadUserNameByUid,
+} from "@/services/firebase";
 import Vue3Toasity from "vue3-toastify";
 import "@/styles/reset.css";
 
@@ -32,4 +35,9 @@ onFirebaseAuthStateChanged((user: User | null) => {
 
   store.original.commit("userData/setUserUid", user ? user.uid : null);
   store.original.commit("userData/setUserEmail", user ? user.email : null);
+
+  store.original.commit("userData/setUserName", "(the name is loading...)");
+  loadUserNameByUid(user ? user.uid : null).catch(() => {
+    store.original.commit("userData/setUserName", "(error while loading)");
+  });
 });

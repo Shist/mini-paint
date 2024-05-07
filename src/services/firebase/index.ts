@@ -7,7 +7,7 @@ import {
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore/lite";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore/lite";
 import store from "@/store";
 
 const firebaseApp = initializeApp({
@@ -63,4 +63,26 @@ async function signOutUser() {
   store.commit.userData.setUserName(null);
 }
 
-export { onFirebaseAuthStateChanged, signUpUser, signInUser, signOutUser };
+async function loadUserNameByUid(userUid: string | null) {
+  if (userUid === null) {
+    throw new Error("Can not load user name: 'userUid' value is null!");
+  }
+
+  const db = getFirestore();
+
+  const userDataDoc = doc(db, "users", userUid);
+
+  const docSnapshot = await getDoc(userDataDoc);
+
+  const docData = docSnapshot.data();
+
+  store.commit.userData.setUserName(docData ? docData.name : "(empty)");
+}
+
+export {
+  onFirebaseAuthStateChanged,
+  signUpUser,
+  signInUser,
+  signOutUser,
+  loadUserNameByUid,
+};
