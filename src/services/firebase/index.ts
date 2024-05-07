@@ -61,7 +61,6 @@ async function signOutUser() {
   store.commit.userData.setUserUid(null);
   store.commit.userData.setUserEmail(null);
   store.commit.userData.setUserName(null);
-  store.commit.userData.setUserPaintings(null);
 }
 
 export { onFirebaseAuthStateChanged, signUpUser, signInUser, signOutUser };
