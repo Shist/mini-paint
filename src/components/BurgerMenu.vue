@@ -29,6 +29,22 @@
         <theme-switch class="burger-menu__theme-switch" />
         <ul v-if="userEmail" class="burger-menu__nav-list">
           <li class="burger-menu__nav-list-item">
+            <a
+              class="burger-menu__link"
+              @click.stop="onCommunityPaintingsBtnClicked"
+            >
+              Community paintings
+            </a>
+          </li>
+          <li class="burger-menu__nav-list-item">
+            <a
+              class="burger-menu__link"
+              @click.stop="onCreateNewPaintingBtnClicked"
+            >
+              Create new painting
+            </a>
+          </li>
+          <li class="burger-menu__nav-list-item">
             <a class="burger-menu__link" @click.stop="onLogOutBtnClicked">
               Log out
             </a>
@@ -75,10 +91,20 @@ export default defineComponent({
     const userEmail = computed(() => store.state.userData.userEmail);
     const userName = computed(() => store.state.userData.userName);
 
+    const onCommunityPaintingsBtnClicked = () => {
+      menuIsOpened.value = false;
+      router.push("/");
+    };
+
+    const onCreateNewPaintingBtnClicked = () => {
+      menuIsOpened.value = false;
+      router.push("/new-painting");
+    };
+
     const onLogOutBtnClicked = async () => {
       try {
         await signOutUser();
-        menuIsOpened.value = true;
+        menuIsOpened.value = false;
         router.push("/sign-in");
       } catch (error: unknown) {
         if (error instanceof Error) {
@@ -94,6 +120,8 @@ export default defineComponent({
       menuIsOpened,
       userEmail,
       userName,
+      onCommunityPaintingsBtnClicked,
+      onCreateNewPaintingBtnClicked,
       onLogOutBtnClicked,
     };
   },
@@ -135,6 +163,8 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     background-color: var(--color-burger-menu-bg);
+    max-height: 100dvh;
+    overflow-y: auto;
     @media (max-width: $tablet-l) {
       padding: 20px;
     }
@@ -142,7 +172,7 @@ export default defineComponent({
       padding: 10px;
     }
     .burger-menu__curr-acc-wrapper {
-      margin-bottom: 30px;
+      margin-bottom: 10px;
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -209,20 +239,26 @@ export default defineComponent({
     }
     .burger-menu__headline {
       @include default-headline(48px, 48px, var(--color-burger-menu-text));
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       text-align: center;
+      @media (max-width: $tablet-l) {
+        font-size: 36px;
+        line-height: 36px;
+      }
     }
     .burger-menu__theme-switch {
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
     .burger-menu__nav-list {
-      margin-bottom: 50px;
+      margin-bottom: 30px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      row-gap: 10px;
+      row-gap: 20px;
       .burger-menu__nav-list-item {
+        width: 80%;
         padding: 20px;
+        text-align: center;
         border: 3px solid var(--color-burger-menu-link-borders);
         border-radius: 10px;
         cursor: pointer;
@@ -241,9 +277,13 @@ export default defineComponent({
           @include default-text(36px, 36px, var(--color-burger-menu-text));
           text-decoration: none;
           transition: 0.3s;
+          @media (max-width: $laptop-s) {
+            font-size: 24px;
+            line-height: 24px;
+          }
           @media (max-width: $phone-l) {
-            font-size: 32px;
-            line-height: 32px;
+            font-size: 20px;
+            line-height: 20px;
           }
         }
       }
