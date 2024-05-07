@@ -24,22 +24,43 @@
             class="new-painting-page__brush-width-input"
             id="brushWidthInput"
           />
+          <button
+            class="new-painting-page__brush-btn"
+            id="toolBtnBrush"
+            :class="{ 'active-tool-btn': activeToolBtn === 'toolBtnBrush' }"
+            @click="activeToolBtn = 'toolBtnBrush'"
+          ></button>
         </div>
         <div class="new-painting-page__shapes-wrapper">
           <button
             class="new-painting-page__shape-btn new-painting-page__shape-btn_line"
+            id="toolBtnLine"
+            :class="{ 'active-tool-btn': activeToolBtn === 'toolBtnLine' }"
+            @click="activeToolBtn = 'toolBtnLine'"
           ></button>
           <button
             class="new-painting-page__shape-btn new-painting-page__shape-btn_circle"
+            id="toolBtnCircle"
+            :class="{ 'active-tool-btn': activeToolBtn === 'toolBtnCircle' }"
+            @click="activeToolBtn = 'toolBtnCircle'"
           ></button>
           <button
-            class="new-painting-page__shape-btn new-painting-page__shape-btn_rectangular"
+            class="new-painting-page__shape-btn new-painting-page__shape-btn_rectangle"
+            id="toolBtnRectangle"
+            :class="{ 'active-tool-btn': activeToolBtn === 'toolBtnRectangle' }"
+            @click="activeToolBtn = 'toolBtnRectangle'"
           ></button>
           <button
             class="new-painting-page__shape-btn new-painting-page__shape-btn_star"
+            id="toolBtnStar"
+            :class="{ 'active-tool-btn': activeToolBtn === 'toolBtnStar' }"
+            @click="activeToolBtn = 'toolBtnStar'"
           ></button>
           <button
             class="new-painting-page__shape-btn new-painting-page__shape-btn_polygon"
+            id="toolBtnPolygon"
+            :class="{ 'active-tool-btn': activeToolBtn === 'toolBtnPolygon' }"
+            @click="activeToolBtn = 'toolBtnPolygon'"
           ></button>
         </div>
       </div>
@@ -63,12 +84,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import BurgerMenu from "@/components/BurgerMenu.vue";
 
 export default defineComponent({
   name: "new-painting-page",
   components: { BurgerMenu },
+  setup() {
+    const activeToolBtn = ref("toolBtnBrush");
+
+    return { activeToolBtn };
+  },
 });
 </script>
 
@@ -123,18 +149,35 @@ export default defineComponent({
           width: 100px;
           height: 30px;
         }
-      }
-      .new-painting-page__shapes-wrapper {
-        display: flex;
-        align-items: center;
-        column-gap: 10px;
-        .new-painting-page__shape-btn {
-          width: 50px;
-          height: 50px;
+        .new-painting-page__brush-btn {
+          width: 45px;
+          height: 45px;
+          background: transparent var(--canvas-tool-brush-img) no-repeat center /
+            cover;
           cursor: pointer;
           transition: 0.3s;
           &:hover {
             transform: scale(1.05);
+            box-shadow: 2px 4px 4px 0 rgba(var(--canvas-btn-shadow-rgb), 0.3);
+          }
+          @media (max-width: $tablet-s) {
+            height: 40px;
+            width: 40px;
+          }
+        }
+      }
+      .new-painting-page__shapes-wrapper {
+        display: flex;
+        align-items: center;
+        column-gap: 8px;
+        .new-painting-page__shape-btn {
+          width: 45px;
+          height: 45px;
+          cursor: pointer;
+          transition: 0.3s;
+          &:hover {
+            transform: scale(1.05);
+            box-shadow: 2px 4px 4px 0 rgba(var(--canvas-btn-shadow-rgb), 0.3);
           }
           @media (max-width: $tablet-s) {
             height: 40px;
@@ -148,7 +191,7 @@ export default defineComponent({
             background: transparent var(--canvas-tool-circle-img) no-repeat
               center / cover;
           }
-          &_rectangular {
+          &_rectangle {
             background: transparent var(--canvas-tool-rectangular-img) no-repeat
               center / cover;
           }
