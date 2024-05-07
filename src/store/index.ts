@@ -1,13 +1,9 @@
 import { createDirectStore } from "direct-vuex";
-import userDataModule from "@/store/userDataModule";
 import signInModule from "@/store/signInModule";
 import signUpModule from "@/store/signUpModule";
+import themeModule from "@/store/themeModule";
 import toastModule from "@/store/toastModule";
-import { updateGlobalOptions } from "vue3-toastify";
-
-export interface IMainStoreState {
-  theme: "light" | "dark";
-}
+import userDataModule from "@/store/userDataModule";
 
 const {
   store,
@@ -16,21 +12,14 @@ const {
   rootGetterContext,
   moduleGetterContext,
 } = createDirectStore({
-  state: (): IMainStoreState => ({
-    theme: localStorage.getItem("theme") === "dark" ? "dark" : "light",
-  }),
+  state: {},
   getters: {},
-  mutations: {
-    setTheme(state, theme: "light" | "dark") {
-      state.theme = theme;
-      localStorage.setItem("theme", theme);
-      updateGlobalOptions({ clearOnUrlChange: false, theme });
-    },
-  },
+  mutations: {},
   actions: {},
   modules: {
     signIn: signInModule,
     signUp: signUpModule,
+    theme: themeModule,
     toast: toastModule,
     userData: userDataModule,
   },

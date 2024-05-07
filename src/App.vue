@@ -1,5 +1,5 @@
 <template>
-  <div class="global-container" :class="{ 'dark-theme': theme === 'dark' }">
+  <div class="global-container" :class="{ 'dark-theme': currTheme === 'dark' }">
     <router-view />
   </div>
 </template>
@@ -13,9 +13,9 @@ export default defineComponent({
   setup() {
     const store = useStore();
 
-    const theme = computed(() => store.state.theme);
+    const currTheme = computed(() => store.state.theme.currTheme);
 
-    return { theme };
+    return { currTheme };
   },
 });
 </script>

@@ -25,7 +25,7 @@ onFirebaseAuthStateChanged((user: User | null) => {
       .use(store.original)
       .use(Vue3Toasity, {
         clearOnUrlChange: false,
-        theme: store.original.state.theme,
+        theme: store.original.state.theme.currTheme,
       })
       .mount("#app");
   }

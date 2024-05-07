@@ -11,7 +11,9 @@
         class="theme-switch__input"
         id="theme-switch"
         :checked="theme === 'dark'"
-        @change="theme === 'dark' ? setTheme('light') : setTheme('dark')"
+        @change="
+          theme === 'dark' ? setCurrTheme('light') : setCurrTheme('dark')
+        "
       />
       <div class="theme-switch__slider"></div>
     </label>
@@ -21,19 +23,19 @@
 <script lang="ts">
 import { defineComponent, computed } from "vue";
 import { useStore } from "vuex";
-import { IMainStoreState } from "@/store";
+import { IThemeState } from "@/store/themeModule";
 
 export default defineComponent({
   name: "theme-switch",
   setup() {
     const store = useStore();
 
-    const theme = computed(() => store.state.theme);
-    const setTheme = (newValue: IMainStoreState["theme"]) => {
-      store.commit("setTheme", newValue);
+    const theme = computed(() => store.state.theme.currTheme);
+    const setCurrTheme = (newValue: IThemeState["currTheme"]) => {
+      store.commit("theme/setCurrTheme", newValue);
     };
 
-    return { theme, setTheme };
+    return { theme, setCurrTheme };
   },
 });
 </script>
