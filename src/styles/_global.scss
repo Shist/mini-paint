@@ -27,6 +27,13 @@
   --color-toast-bg: #ffffff;
   --color-toast-text: #000000;
 
+  --color-canvas-borders: #000000;
+  --canvas-tool-line-img: url("@/assets/icons/line-black.svg");
+  --canvas-tool-circle-img: url("@/assets/icons/circle-black.svg");
+  --canvas-tool-rectangular-img: url("@/assets/icons/rectangle-black.svg");
+  --canvas-tool-star-img: url("@/assets/icons/star-black.svg");
+  --canvas-tool-polygon-img: url("@/assets/icons/polygon-black.svg");
+
   --color-theme-slider-dark: #2b2b2b;
   --color-theme-slider-light: #cccccc;
   --color-theme-slider-circle: #ffffff;
@@ -56,6 +63,13 @@
 
   --color-toast-bg: #000000;
   --color-toast-text: #ffffff;
+
+  --color-canvas-borders: #ffffff;
+  --canvas-tool-line-img: url("@/assets/icons/line-white.svg");
+  --canvas-tool-circle-img: url("@/assets/icons/circle-white.svg");
+  --canvas-tool-rectangular-img: url("@/assets/icons/rectangle-white.svg");
+  --canvas-tool-star-img: url("@/assets/icons/star-white.svg");
+  --canvas-tool-polygon-img: url("@/assets/icons/polygon-white.svg");
 }
 
 // Global container of whole page
