@@ -1,6 +1,4 @@
 import { createDirectStore } from "direct-vuex";
-import signInModule from "@/store/signInModule";
-import signUpModule from "@/store/signUpModule";
 import themeModule from "@/store/themeModule";
 import toastModule from "@/store/toastModule";
 import userDataModule from "@/store/userDataModule";
@@ -17,8 +15,6 @@ const {
   mutations: {},
   actions: {},
   modules: {
-    signIn: signInModule,
-    signUp: signUpModule,
     theme: themeModule,
     toast: toastModule,
     userData: userDataModule,

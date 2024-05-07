@@ -1,10 +1,10 @@
-import { WritableComputedRef } from "vue";
+import { Ref } from "vue";
 
 export interface ISignUpStateRef {
-  email: WritableComputedRef<string>;
-  name: WritableComputedRef<string>;
-  password: WritableComputedRef<string>;
-  repeatPassword: WritableComputedRef<string>;
+  email: Ref<string>;
+  name: Ref<string>;
+  password: Ref<string>;
+  repeatPassword: Ref<string>;
 }
 
 export default function useValidationErrorMsg({

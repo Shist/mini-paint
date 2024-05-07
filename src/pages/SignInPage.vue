@@ -49,43 +49,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue";
-import { useStore } from "vuex";
+import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import BurgerMenu from "@/components/BurgerMenu.vue";
 import useToast from "@/composables/useToast";
 import useFirebaseErrorMsg from "@/composables/useFirebaseErrorMsg";
 import { signInUser } from "@/services/firebase";
-import { ISignInState } from "@/store/signInModule";
 
 export default defineComponent({
   name: "sign-in-page",
   components: { BurgerMenu },
   setup() {
-    const store = useStore();
     const router = useRouter();
     const isLoading = ref(false);
 
     const { setLoadingToast, setSuccessToast, setErrorToast } = useToast();
     const { getErrorMsg } = useFirebaseErrorMsg();
 
-    const email = computed({
-      get() {
-        return store.state.signIn.email;
-      },
-      set(newValue: ISignInState["email"]) {
-        store.commit("signIn/setEmail", newValue);
-      },
-    });
-
-    const password = computed({
-      get() {
-        return store.state.signIn.password;
-      },
-      set(newValue: ISignInState["password"]) {
-        store.commit("signIn/setPassword", newValue);
-      },
-    });
+    const email = ref("");
+    const password = ref("");
 
     const onConfirmBtnClicked = async () => {
       isLoading.value = true;

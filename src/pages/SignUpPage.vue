@@ -76,62 +76,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue";
-import { useStore } from "vuex";
+import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import BurgerMenu from "@/components/BurgerMenu.vue";
 import useToast from "@/composables/useToast";
 import useFirebaseErrorMsg from "@/composables/useFirebaseErrorMsg";
 import useValidationErrorMsg from "@/composables/useValidationErrorMsg";
 import { signUpUser } from "@/services/firebase";
-import { ISignUpState } from "@/store/signUpModule";
 
 export default defineComponent({
   name: "sign-up-page",
   components: { BurgerMenu },
   setup() {
-    const store = useStore();
     const router = useRouter();
     const isLoading = ref(false);
 
     const { setLoadingToast, setSuccessToast, setErrorToast } = useToast();
     const { getErrorMsg } = useFirebaseErrorMsg();
 
-    const email = computed({
-      get() {
-        return store.state.signUp.email;
-      },
-      set(newValue: ISignUpState["email"]) {
-        store.commit("signUp/setEmail", newValue);
-      },
-    });
-
-    const name = computed({
-      get() {
-        return store.state.signUp.name;
-      },
-      set(newValue: ISignUpState["name"]) {
-        store.commit("signUp/setName", newValue);
-      },
-    });
-
-    const password = computed({
-      get() {
-        return store.state.signUp.password;
-      },
-      set(newValue: ISignUpState["password"]) {
-        store.commit("signUp/setPassword", newValue);
-      },
-    });
-
-    const repeatPassword = computed({
-      get() {
-        return store.state.signUp.repeatPassword;
-      },
-      set(newValue: ISignUpState["repeatPassword"]) {
-        store.commit("signUp/setRepeatPassword", newValue);
-      },
-    });
+    const email = ref("");
+    const name = ref("");
+    const password = ref("");
+    const repeatPassword = ref("");
 
     const { getValidationError } = useValidationErrorMsg({
       email,

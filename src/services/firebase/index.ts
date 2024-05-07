@@ -34,7 +34,6 @@ async function signUpUser(email: string, name: string, password: string) {
     email,
     password
   );
-  console.log(newUserInfo.user.uid);
 
   if (!newUserInfo.user.uid) {
     return;
