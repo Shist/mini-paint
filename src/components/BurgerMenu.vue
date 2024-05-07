@@ -1,13 +1,12 @@
 <template>
-  <button class="burger-btn" @click="setMenuIsOpened(true)"></button>
+  <button class="burger-btn" @click="menuIsOpened = true"></button>
   <teleport to=".global-container">
     <div
       v-show="menuIsOpened"
       class="burger-menu"
       @click="
-        setMenuIsOpened(
+        menuIsOpened =
           ($event.target as HTMLElement).className !== 'burger-menu'
-        )
       "
     >
       <nav class="burger-menu__nav">
@@ -55,13 +54,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { ref, defineComponent, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import useToast from "@/composables/useToast";
 import useFirebaseErrorMsg from "@/composables/useFirebaseErrorMsg";
 import { signOutUser } from "@/services/firebase";
-import { IBurgerMenuState } from "@/store/burgerMenuModule";
 
 export default defineComponent({
   name: "burger-menu",
@@ -72,10 +70,7 @@ export default defineComponent({
     const { setErrorToast } = useToast();
     const { getErrorMsg } = useFirebaseErrorMsg();
 
-    const menuIsOpened = computed(() => store.state.burgerMenu.menuIsOpened);
-    const setMenuIsOpened = (newValue: IBurgerMenuState["menuIsOpened"]) => {
-      store.commit("burgerMenu/setMenuIsOpened", newValue);
-    };
+    const menuIsOpened = ref(false);
 
     const userEmail = computed(() => store.state.userData.userEmail);
     const userName = computed(() => store.state.userData.userName);
@@ -83,7 +78,7 @@ export default defineComponent({
     const onLogOutBtnClicked = async () => {
       try {
         await signOutUser();
-        setMenuIsOpened(false);
+        menuIsOpened.value = true;
         router.push("/sign-in");
       } catch (error: unknown) {
         if (error instanceof Error) {
@@ -97,7 +92,6 @@ export default defineComponent({
 
     return {
       menuIsOpened,
-      setMenuIsOpened,
       userEmail,
       userName,
       onLogOutBtnClicked,

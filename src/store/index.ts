@@ -1,5 +1,4 @@
 import { createDirectStore } from "direct-vuex";
-import burgerMenuModule from "@/store/burgerMenuModule";
 import userDataModule from "@/store/userDataModule";
 import signInModule from "@/store/signInModule";
 import signUpModule from "@/store/signUpModule";
@@ -30,7 +29,6 @@ const {
   },
   actions: {},
   modules: {
-    burgerMenu: burgerMenuModule,
     signIn: signInModule,
     signUp: signUpModule,
     toast: toastModule,
