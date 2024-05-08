@@ -4,6 +4,7 @@ import useBrush from "@/composables/usePaint/useBrush";
 import useLine from "@/composables/usePaint/useLine";
 import useEllipse from "@/composables/usePaint/useEllipse";
 import useRectangle from "@/composables/usePaint/useRectangle";
+import useStar from "@/composables/usePaint/useStar";
 
 export default function usePaint() {
   const paintingCanvas = ref(null) as Ref<HTMLCanvasElement | null>;
@@ -47,6 +48,13 @@ export default function usePaint() {
       previewCanvasCtx
     );
 
+  const { starStartDrawing, starDrawPreview, starEndDrawing } = useStar(
+    paintingCanvas,
+    paintingCanvasCtx,
+    previewCanvas,
+    previewCanvasCtx
+  );
+
   const handleMouseUpOutsideCanvas = (e: MouseEvent) => {
     switch (activeToolBtn.value) {
       case PAINT_TOOL_BTN_TYPES.BRUSH:
@@ -62,6 +70,7 @@ export default function usePaint() {
         rectangleEndDrawing(e);
         break;
       case PAINT_TOOL_BTN_TYPES.STAR:
+        starEndDrawing(e);
         break;
       case PAINT_TOOL_BTN_TYPES.POLYGON:
         break;
@@ -135,6 +144,7 @@ export default function usePaint() {
         rectangleStartDrawing(e);
         break;
       case PAINT_TOOL_BTN_TYPES.STAR:
+        starStartDrawing(e);
         break;
       case PAINT_TOOL_BTN_TYPES.POLYGON:
         break;
@@ -156,6 +166,7 @@ export default function usePaint() {
         rectangleEndDrawing(e);
         break;
       case PAINT_TOOL_BTN_TYPES.STAR:
+        starEndDrawing(e);
         break;
       case PAINT_TOOL_BTN_TYPES.POLYGON:
         break;
@@ -213,6 +224,7 @@ export default function usePaint() {
         rectangleDrawPreview(e);
         break;
       case PAINT_TOOL_BTN_TYPES.STAR:
+        starDrawPreview(e);
         break;
       case PAINT_TOOL_BTN_TYPES.POLYGON:
         break;

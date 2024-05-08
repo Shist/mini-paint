@@ -14,7 +14,7 @@
         class="new-painting-page__preview-canvas"
         @mousedown.prevent="onClickDown"
         @mousemove.prevent="onMove"
-        @mouseup.prevent.stop="onClickUp"
+        @mouseup.stop.prevent="onClickUp"
         @mouseout.prevent="onMouseLeave"
         @mouseenter.prevent="onMouseEnter"
         @touchstart.prevent="onClickDown"
