@@ -59,11 +59,11 @@
           ></button>
           <button
             class="new-painting-page__shape-btn new-painting-page__shape-btn_circle"
-            :id="PAINT_TOOL_BTN_TYPES.CIRCLE"
+            :id="PAINT_TOOL_BTN_TYPES.ELLIPSE"
             :class="{
-              'active-tool-btn': activeToolBtn === PAINT_TOOL_BTN_TYPES.CIRCLE,
+              'active-tool-btn': activeToolBtn === PAINT_TOOL_BTN_TYPES.ELLIPSE,
             }"
-            @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.CIRCLE"
+            @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.ELLIPSE"
           ></button>
           <button
             class="new-painting-page__shape-btn new-painting-page__shape-btn_rectangle"

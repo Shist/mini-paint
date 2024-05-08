@@ -1,7 +1,8 @@
 import { ref, Ref, onMounted, onUnmounted, watch } from "vue";
 import { PAINT_TOOL_BTN_TYPES } from "@/constants";
-import useBrush from "./useBrush";
-import useLine from "./useLine";
+import useBrush from "@/composables/usePaint/useBrush";
+import useLine from "@/composables/usePaint/useLine";
+import useEllipse from "@/composables/usePaint/useEllipse";
 
 export default function usePaint() {
   const paintingCanvas = ref(null) as Ref<HTMLCanvasElement | null>;
@@ -29,6 +30,14 @@ export default function usePaint() {
     previewCanvasCtx
   );
 
+  const { ellipseStartDrawing, ellipseDrawPreview, ellipseEndDrawing } =
+    useEllipse(
+      paintingCanvas,
+      paintingCanvasCtx,
+      previewCanvas,
+      previewCanvasCtx
+    );
+
   const handleMouseUpOutsideCanvas = (e: MouseEvent) => {
     switch (activeToolBtn.value) {
       case PAINT_TOOL_BTN_TYPES.BRUSH:
@@ -37,7 +46,8 @@ export default function usePaint() {
       case PAINT_TOOL_BTN_TYPES.LINE:
         lineEndDrawing(e);
         break;
-      case PAINT_TOOL_BTN_TYPES.CIRCLE:
+      case PAINT_TOOL_BTN_TYPES.ELLIPSE:
+        ellipseEndDrawing(e);
         break;
       case PAINT_TOOL_BTN_TYPES.RECTANGLE:
         break;
@@ -108,7 +118,8 @@ export default function usePaint() {
       case PAINT_TOOL_BTN_TYPES.LINE:
         lineStartDrawing(e);
         break;
-      case PAINT_TOOL_BTN_TYPES.CIRCLE:
+      case PAINT_TOOL_BTN_TYPES.ELLIPSE:
+        ellipseStartDrawing(e);
         break;
       case PAINT_TOOL_BTN_TYPES.RECTANGLE:
         break;
@@ -127,7 +138,8 @@ export default function usePaint() {
       case PAINT_TOOL_BTN_TYPES.LINE:
         lineEndDrawing(e);
         break;
-      case PAINT_TOOL_BTN_TYPES.CIRCLE:
+      case PAINT_TOOL_BTN_TYPES.ELLIPSE:
+        ellipseEndDrawing(e);
         break;
       case PAINT_TOOL_BTN_TYPES.RECTANGLE:
         break;
@@ -145,7 +157,7 @@ export default function usePaint() {
         break;
       case PAINT_TOOL_BTN_TYPES.LINE:
         break;
-      case PAINT_TOOL_BTN_TYPES.CIRCLE:
+      case PAINT_TOOL_BTN_TYPES.ELLIPSE:
         break;
       case PAINT_TOOL_BTN_TYPES.RECTANGLE:
         break;
@@ -163,7 +175,7 @@ export default function usePaint() {
         break;
       case PAINT_TOOL_BTN_TYPES.LINE:
         break;
-      case PAINT_TOOL_BTN_TYPES.CIRCLE:
+      case PAINT_TOOL_BTN_TYPES.ELLIPSE:
         break;
       case PAINT_TOOL_BTN_TYPES.RECTANGLE:
         break;
@@ -182,7 +194,8 @@ export default function usePaint() {
       case PAINT_TOOL_BTN_TYPES.LINE:
         lineDrawPreview(e);
         break;
-      case PAINT_TOOL_BTN_TYPES.CIRCLE:
+      case PAINT_TOOL_BTN_TYPES.ELLIPSE:
+        ellipseDrawPreview(e);
         break;
       case PAINT_TOOL_BTN_TYPES.RECTANGLE:
         break;
