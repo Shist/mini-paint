@@ -7,14 +7,14 @@
         ref="paintingCanvas"
         id="painting-canvas"
         class="new-painting-page__painting-canvas"
-        @mousedown.prevent="startDrawing"
-        @mousemove.prevent="draw"
-        @mouseup.prevent="endDrawing"
-        @mouseout.prevent="stopDrawing"
-        @mouseenter.prevent="resumeDrawing"
-        @touchstart.prevent="startDrawing"
-        @touchmove.prevent="draw"
-        @touchend.prevent="endDrawing"
+        @mousedown.prevent="onClickDown"
+        @mousemove.prevent="onMove"
+        @mouseup.prevent="onClickUp"
+        @mouseout.prevent="onMouseLeave"
+        @mouseenter.prevent="onMouseEnter"
+        @touchstart.prevent="onClickDown"
+        @touchmove.prevent="onMove"
+        @touchend.prevent="onClickUp"
       ></canvas>
       <div class="new-painting-page__tools-wrapper">
         <div class="new-painting-page__brush-color-wrapper">

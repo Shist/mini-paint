@@ -10,6 +10,10 @@ export default function usePaint() {
   let isDrawing = false;
   let isDrawingStopped = false;
 
+  const cancelDrawingStopping = () => {
+    isDrawingStopped = false;
+  };
+
   onMounted(() => {
     if (!paintingCanvas.value) {
       return;
@@ -66,36 +70,32 @@ export default function usePaint() {
     }
   };
 
-  const startDrawing = (e: MouseEvent | TouchEvent) => {
+  const onClickDown = (e: MouseEvent | TouchEvent) => {
     isDrawing = true;
     canvasCtx?.beginPath();
-    draw(e);
+    onMove(e);
   };
 
-  const endDrawing = () => {
+  const onClickUp = () => {
     isDrawing = false;
     canvasCtx?.closePath();
   };
 
-  const stopDrawing = () => {
+  const onMouseLeave = () => {
     if (isDrawing) {
-      endDrawing();
+      onClickUp();
       isDrawingStopped = true;
     }
   };
 
-  function cancelDrawingStopping() {
-    isDrawingStopped = false;
-  }
-
-  const resumeDrawing = (e: MouseEvent | TouchEvent) => {
+  const onMouseEnter = (e: MouseEvent | TouchEvent) => {
     if (isDrawingStopped) {
-      startDrawing(e);
+      onClickDown(e);
       isDrawingStopped = false;
     }
   };
 
-  const draw = (e: MouseEvent | TouchEvent) => {
+  const onMove = (e: MouseEvent | TouchEvent) => {
     if (isDrawing && canvasCtx) {
       const position = getPosition(e);
       canvasCtx.lineTo(position.x, position.y);
@@ -108,11 +108,10 @@ export default function usePaint() {
     brushColor,
     brushWidth,
     activeToolBtn,
-    startDrawing,
-    endDrawing,
-    stopDrawing,
-    cancelDrawingStopping,
-    resumeDrawing,
-    draw,
+    onClickDown,
+    onClickUp,
+    onMouseLeave,
+    onMouseEnter,
+    onMove,
   };
 }
