@@ -36,41 +36,54 @@
           />
           <button
             class="new-painting-page__brush-btn"
-            id="toolBtnBrush"
-            :class="{ 'active-tool-btn': activeToolBtn === 'toolBtnBrush' }"
-            @click="activeToolBtn = 'toolBtnBrush'"
+            :id="PAINT_TOOL_BTN_TYPES.BRUSH"
+            :class="{
+              'active-tool-btn': activeToolBtn === PAINT_TOOL_BTN_TYPES.BRUSH,
+            }"
+            @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.BRUSH"
           ></button>
         </div>
         <div class="new-painting-page__shapes-wrapper">
           <button
             class="new-painting-page__shape-btn new-painting-page__shape-btn_line"
-            id="toolBtnLine"
-            :class="{ 'active-tool-btn': activeToolBtn === 'toolBtnLine' }"
-            @click="activeToolBtn = 'toolBtnLine'"
+            :id="PAINT_TOOL_BTN_TYPES.LINE"
+            :class="{
+              'active-tool-btn': activeToolBtn === PAINT_TOOL_BTN_TYPES.LINE,
+            }"
+            @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.LINE"
           ></button>
           <button
             class="new-painting-page__shape-btn new-painting-page__shape-btn_circle"
-            id="toolBtnCircle"
-            :class="{ 'active-tool-btn': activeToolBtn === 'toolBtnCircle' }"
-            @click="activeToolBtn = 'toolBtnCircle'"
+            :id="PAINT_TOOL_BTN_TYPES.CIRCLE"
+            :class="{
+              'active-tool-btn': activeToolBtn === PAINT_TOOL_BTN_TYPES.CIRCLE,
+            }"
+            @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.CIRCLE"
           ></button>
           <button
             class="new-painting-page__shape-btn new-painting-page__shape-btn_rectangle"
-            id="toolBtnRectangle"
-            :class="{ 'active-tool-btn': activeToolBtn === 'toolBtnRectangle' }"
-            @click="activeToolBtn = 'toolBtnRectangle'"
+            :id="PAINT_TOOL_BTN_TYPES.RECTANGLE"
+            :class="{
+              'active-tool-btn':
+                activeToolBtn === PAINT_TOOL_BTN_TYPES.RECTANGLE,
+            }"
+            @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.RECTANGLE"
           ></button>
           <button
             class="new-painting-page__shape-btn new-painting-page__shape-btn_star"
-            id="toolBtnStar"
-            :class="{ 'active-tool-btn': activeToolBtn === 'toolBtnStar' }"
-            @click="activeToolBtn = 'toolBtnStar'"
+            :id="PAINT_TOOL_BTN_TYPES.STAR"
+            :class="{
+              'active-tool-btn': activeToolBtn === PAINT_TOOL_BTN_TYPES.STAR,
+            }"
+            @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.STAR"
           ></button>
           <button
             class="new-painting-page__shape-btn new-painting-page__shape-btn_polygon"
-            id="toolBtnPolygon"
-            :class="{ 'active-tool-btn': activeToolBtn === 'toolBtnPolygon' }"
-            @click="activeToolBtn = 'toolBtnPolygon'"
+            :id="PAINT_TOOL_BTN_TYPES.POLYGON"
+            :class="{
+              'active-tool-btn': activeToolBtn === PAINT_TOOL_BTN_TYPES.POLYGON,
+            }"
+            @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.POLYGON"
           ></button>
         </div>
       </div>
@@ -97,6 +110,7 @@
 import { defineComponent } from "vue";
 import BurgerMenu from "@/components/BurgerMenu.vue";
 import usePaint from "@/composables/usePaint";
+import { PAINT_TOOL_BTN_TYPES } from "@/constants";
 
 export default defineComponent({
   name: "new-painting-page",
@@ -104,7 +118,7 @@ export default defineComponent({
   setup() {
     const paintObj = usePaint();
 
-    return { ...paintObj };
+    return { ...paintObj, PAINT_TOOL_BTN_TYPES };
   },
 });
 </script>

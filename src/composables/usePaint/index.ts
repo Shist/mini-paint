@@ -1,10 +1,11 @@
 import { ref, Ref, onMounted, onUnmounted, watch } from "vue";
+import { PAINT_TOOL_BTN_TYPES } from "@/constants";
 
 export default function usePaint() {
   const paintingCanvas = ref(null) as Ref<HTMLCanvasElement | null>;
   const brushColor = ref("#000000");
   const brushWidth = ref("5");
-  const activeToolBtn = ref("toolBtnBrush");
+  const activeToolBtn = ref(PAINT_TOOL_BTN_TYPES.BRUSH);
 
   let canvasCtx = null as CanvasRenderingContext2D | null;
   let isDrawing = false;
