@@ -7,12 +7,14 @@
         ref="paintingCanvas"
         id="painting-canvas"
         class="new-painting-page__painting-canvas"
-        @mousedown="startDrawing"
-        @mouseup="endDrawing"
-        @mousemove="draw"
-        @touchstart="startDrawing"
-        @touchend="endDrawing"
-        @touchmove="draw"
+        @mousedown.prevent="startDrawing"
+        @mousemove.prevent="draw"
+        @mouseup.prevent="endDrawing"
+        @mouseout.prevent="stopDrawing"
+        @mouseenter.prevent="resumeDrawing"
+        @touchstart.prevent="startDrawing"
+        @touchmove.prevent="draw"
+        @touchend.prevent="endDrawing"
       ></canvas>
       <div class="new-painting-page__tools-wrapper">
         <div class="new-painting-page__brush-color-wrapper">
@@ -27,8 +29,7 @@
             v-model="brushWidth"
             type="range"
             min="1"
-            max="50"
-            value="10"
+            max="10"
             name="brush-width"
             class="new-painting-page__brush-width-input"
             id="brushWidthInput"
@@ -93,7 +94,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref, onMounted, onUpdated } from "vue";
+import { defineComponent, ref, Ref, onMounted, onUnmounted, watch } from "vue";
 import BurgerMenu from "@/components/BurgerMenu.vue";
 
 export default defineComponent({
@@ -102,38 +103,12 @@ export default defineComponent({
   setup() {
     const paintingCanvas = ref(null) as Ref<HTMLCanvasElement | null>;
     const brushColor = ref("#000000");
-    const brushWidth = ref("10");
+    const brushWidth = ref("5");
     const activeToolBtn = ref("toolBtnBrush");
 
     let canvasCtx = null as CanvasRenderingContext2D | null;
     let isDrawing = false;
-
-    const startDrawing = (e: MouseEvent | TouchEvent) => {
-      isDrawing = true;
-      canvasCtx?.beginPath();
-      draw(e);
-    };
-
-    const endDrawing = () => {
-      isDrawing = false;
-      canvasCtx?.closePath();
-    };
-
-    const draw = (e: MouseEvent | TouchEvent) => {
-      if (!isDrawing || !canvasCtx || !paintingCanvas.value) {
-        return;
-      }
-
-      if (e instanceof MouseEvent) {
-        canvasCtx.lineTo(e.offsetX, e.offsetY);
-      } else if (e instanceof TouchEvent) {
-        canvasCtx.lineTo(
-          e.targetTouches[0].clientX,
-          e.targetTouches[0].clientY
-        );
-      }
-      canvasCtx.stroke();
-    };
+    let isDrawingStopped = false;
 
     onMounted(() => {
       if (!paintingCanvas.value) {
@@ -149,18 +124,84 @@ export default defineComponent({
       canvasCtx.lineCap = "round";
       canvasCtx.strokeStyle = brushColor.value;
       canvasCtx.lineWidth = Number(brushWidth.value);
-      // TODO do something with it
-      canvasCtx.scale(0.43, 0.215);
+
+      window.addEventListener("mouseup", cancelDrawingStopping);
     });
 
-    onUpdated(() => {
-      if (!canvasCtx) {
-        return;
+    onUnmounted(() => {
+      window.removeEventListener("mouseup", cancelDrawingStopping);
+    });
+
+    watch(brushColor, () => {
+      if (canvasCtx) {
+        canvasCtx.strokeStyle = brushColor.value;
+      }
+    });
+
+    watch(brushWidth, () => {
+      if (canvasCtx) {
+        canvasCtx.lineWidth = Number(brushWidth.value);
+      }
+    });
+
+    const getPosition = (e: MouseEvent | TouchEvent) => {
+      if (!paintingCanvas.value) {
+        return { x: 0, y: 0 };
       }
 
-      canvasCtx.strokeStyle = brushColor.value;
-      canvasCtx.lineWidth = Number(brushWidth.value);
-    });
+      const rect = paintingCanvas.value.getBoundingClientRect();
+      const scaleX = paintingCanvas.value.width / rect.width;
+      const scaleY = paintingCanvas.value.height / rect.height;
+
+      if (e instanceof TouchEvent) {
+        return {
+          x: (e.targetTouches[0].clientX - rect.left) * scaleX,
+          y: (e.targetTouches[0].clientY - rect.top) * scaleY,
+        };
+      } else {
+        return {
+          x: (e.clientX - rect.left) * scaleX,
+          y: (e.clientY - rect.top) * scaleY,
+        };
+      }
+    };
+
+    const startDrawing = (e: MouseEvent | TouchEvent) => {
+      isDrawing = true;
+      canvasCtx?.beginPath();
+      draw(e);
+    };
+
+    const endDrawing = () => {
+      isDrawing = false;
+      canvasCtx?.closePath();
+    };
+
+    const stopDrawing = () => {
+      if (isDrawing) {
+        endDrawing();
+        isDrawingStopped = true;
+      }
+    };
+
+    function cancelDrawingStopping() {
+      isDrawingStopped = false;
+    }
+
+    const resumeDrawing = (e: MouseEvent | TouchEvent) => {
+      if (isDrawingStopped) {
+        startDrawing(e);
+        isDrawingStopped = false;
+      }
+    };
+
+    const draw = (e: MouseEvent | TouchEvent) => {
+      if (isDrawing && canvasCtx) {
+        const position = getPosition(e);
+        canvasCtx.lineTo(position.x, position.y);
+        canvasCtx.stroke();
+      }
+    };
 
     return {
       paintingCanvas,
@@ -169,6 +210,9 @@ export default defineComponent({
       activeToolBtn,
       startDrawing,
       endDrawing,
+      stopDrawing,
+      cancelDrawingStopping,
+      resumeDrawing,
       draw,
     };
   },
@@ -200,6 +244,7 @@ export default defineComponent({
     flex-direction: column;
     row-gap: 20px;
     .new-painting-page__painting-canvas {
+      background-color: var(--color-canvas-bg);
       border: 2px solid var(--color-canvas-borders);
       max-height: 700px;
       max-width: 700px;
