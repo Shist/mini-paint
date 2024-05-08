@@ -1,106 +1,136 @@
-import { ref, Ref, onMounted, onUnmounted, watch } from "vue";
+import { ref, Ref, onMounted, watch } from "vue";
 import { PAINT_TOOL_BTN_TYPES } from "@/constants";
+import useBrush from "./useBrush";
 
 export default function usePaint() {
   const paintingCanvas = ref(null) as Ref<HTMLCanvasElement | null>;
+  const canvasCtx = ref(null) as Ref<CanvasRenderingContext2D | null>;
   const brushColor = ref("#000000");
   const brushWidth = ref("5");
   const activeToolBtn = ref(PAINT_TOOL_BTN_TYPES.BRUSH);
-
-  let canvasCtx = null as CanvasRenderingContext2D | null;
-  let isDrawing = false;
-  let isDrawingStopped = false;
-
-  const cancelDrawingStopping = () => {
-    isDrawingStopped = false;
-  };
+  const {
+    brushStartDrawing,
+    brushEndDrawing,
+    brushStopDrawing,
+    brushResumeDrawing,
+    brushDraw,
+  } = useBrush(paintingCanvas, canvasCtx);
 
   onMounted(() => {
     if (!paintingCanvas.value) {
       return;
     }
 
-    canvasCtx = paintingCanvas.value.getContext("2d");
+    canvasCtx.value = paintingCanvas.value.getContext("2d");
 
-    if (!canvasCtx) {
+    if (!canvasCtx.value) {
       return;
     }
 
-    canvasCtx.lineCap = "round";
-    canvasCtx.strokeStyle = brushColor.value;
-    canvasCtx.lineWidth = Number(brushWidth.value);
-
-    window.addEventListener("mouseup", cancelDrawingStopping);
-  });
-
-  onUnmounted(() => {
-    window.removeEventListener("mouseup", cancelDrawingStopping);
+    canvasCtx.value.lineCap = "round";
+    canvasCtx.value.strokeStyle = brushColor.value;
+    canvasCtx.value.lineWidth = Number(brushWidth.value);
   });
 
   watch(brushColor, () => {
-    if (canvasCtx) {
-      canvasCtx.strokeStyle = brushColor.value;
+    if (canvasCtx.value) {
+      canvasCtx.value.strokeStyle = brushColor.value;
     }
   });
 
   watch(brushWidth, () => {
-    if (canvasCtx) {
-      canvasCtx.lineWidth = Number(brushWidth.value);
+    if (canvasCtx.value) {
+      canvasCtx.value.lineWidth = Number(brushWidth.value);
     }
   });
 
-  const getPosition = (e: MouseEvent | TouchEvent) => {
-    if (!paintingCanvas.value) {
-      return { x: 0, y: 0 };
-    }
-
-    const rect = paintingCanvas.value.getBoundingClientRect();
-    const scaleX = paintingCanvas.value.width / rect.width;
-    const scaleY = paintingCanvas.value.height / rect.height;
-
-    if (e instanceof TouchEvent) {
-      return {
-        x: (e.targetTouches[0].clientX - rect.left) * scaleX,
-        y: (e.targetTouches[0].clientY - rect.top) * scaleY,
-      };
-    } else {
-      return {
-        x: (e.clientX - rect.left) * scaleX,
-        y: (e.clientY - rect.top) * scaleY,
-      };
-    }
-  };
-
   const onClickDown = (e: MouseEvent | TouchEvent) => {
-    isDrawing = true;
-    canvasCtx?.beginPath();
-    onMove(e);
+    switch (activeToolBtn.value) {
+      case PAINT_TOOL_BTN_TYPES.BRUSH:
+        brushStartDrawing(e);
+        break;
+      case PAINT_TOOL_BTN_TYPES.LINE:
+        break;
+      case PAINT_TOOL_BTN_TYPES.CIRCLE:
+        break;
+      case PAINT_TOOL_BTN_TYPES.RECTANGLE:
+        break;
+      case PAINT_TOOL_BTN_TYPES.STAR:
+        break;
+      case PAINT_TOOL_BTN_TYPES.POLYGON:
+        break;
+    }
   };
 
   const onClickUp = () => {
-    isDrawing = false;
-    canvasCtx?.closePath();
+    switch (activeToolBtn.value) {
+      case PAINT_TOOL_BTN_TYPES.BRUSH:
+        brushEndDrawing();
+        break;
+      case PAINT_TOOL_BTN_TYPES.LINE:
+        break;
+      case PAINT_TOOL_BTN_TYPES.CIRCLE:
+        break;
+      case PAINT_TOOL_BTN_TYPES.RECTANGLE:
+        break;
+      case PAINT_TOOL_BTN_TYPES.STAR:
+        break;
+      case PAINT_TOOL_BTN_TYPES.POLYGON:
+        break;
+    }
   };
 
   const onMouseLeave = () => {
-    if (isDrawing) {
-      onClickUp();
-      isDrawingStopped = true;
+    switch (activeToolBtn.value) {
+      case PAINT_TOOL_BTN_TYPES.BRUSH:
+        brushStopDrawing();
+        break;
+      case PAINT_TOOL_BTN_TYPES.LINE:
+        break;
+      case PAINT_TOOL_BTN_TYPES.CIRCLE:
+        break;
+      case PAINT_TOOL_BTN_TYPES.RECTANGLE:
+        break;
+      case PAINT_TOOL_BTN_TYPES.STAR:
+        break;
+      case PAINT_TOOL_BTN_TYPES.POLYGON:
+        break;
     }
   };
 
   const onMouseEnter = (e: MouseEvent | TouchEvent) => {
-    if (isDrawingStopped) {
-      onClickDown(e);
-      isDrawingStopped = false;
+    switch (activeToolBtn.value) {
+      case PAINT_TOOL_BTN_TYPES.BRUSH:
+        brushResumeDrawing(e);
+        break;
+      case PAINT_TOOL_BTN_TYPES.LINE:
+        break;
+      case PAINT_TOOL_BTN_TYPES.CIRCLE:
+        break;
+      case PAINT_TOOL_BTN_TYPES.RECTANGLE:
+        break;
+      case PAINT_TOOL_BTN_TYPES.STAR:
+        break;
+      case PAINT_TOOL_BTN_TYPES.POLYGON:
+        break;
     }
   };
 
   const onMove = (e: MouseEvent | TouchEvent) => {
-    if (isDrawing && canvasCtx) {
-      const position = getPosition(e);
-      canvasCtx.lineTo(position.x, position.y);
-      canvasCtx.stroke();
+    switch (activeToolBtn.value) {
+      case PAINT_TOOL_BTN_TYPES.BRUSH:
+        brushDraw(e);
+        break;
+      case PAINT_TOOL_BTN_TYPES.LINE:
+        break;
+      case PAINT_TOOL_BTN_TYPES.CIRCLE:
+        break;
+      case PAINT_TOOL_BTN_TYPES.RECTANGLE:
+        break;
+      case PAINT_TOOL_BTN_TYPES.STAR:
+        break;
+      case PAINT_TOOL_BTN_TYPES.POLYGON:
+        break;
     }
   };
 
