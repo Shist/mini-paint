@@ -7,9 +7,14 @@
         ref="paintingCanvas"
         id="painting-canvas"
         class="new-painting-page__painting-canvas"
+      ></canvas>
+      <canvas
+        ref="previewCanvas"
+        id="preview-canvas"
+        class="new-painting-page__preview-canvas"
         @mousedown.prevent="onClickDown"
         @mousemove.prevent="onMove"
-        @mouseup.prevent="onClickUp"
+        @mouseup.prevent.stop="onClickUp"
         @mouseout.prevent="onMouseLeave"
         @mouseenter.prevent="onMouseEnter"
         @touchstart.prevent="onClickDown"
@@ -143,12 +148,22 @@ export default defineComponent({
     }
   }
   &__painting-wrapper {
+    position: relative;
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     row-gap: 20px;
     .new-painting-page__painting-canvas {
       background-color: var(--color-canvas-bg);
+      border: 2px solid var(--color-canvas-borders);
+      max-height: 700px;
+      max-width: 700px;
+      height: calc(100dvw - 60px);
+      width: calc(100dvw - 60px);
+    }
+    .new-painting-page__preview-canvas {
+      position: absolute;
+      background-color: transparent;
       border: 2px solid var(--color-canvas-borders);
       max-height: 700px;
       max-width: 700px;

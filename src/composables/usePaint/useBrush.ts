@@ -1,36 +1,32 @@
-import { Ref, onMounted, onUnmounted } from "vue";
+import { Ref } from "vue";
 import usePosition from "@/composables/usePaint/usePosition";
 
 export default function useBrush(
   paintingCanvas: Ref<HTMLCanvasElement | null>,
-  canvasCtx: Ref<CanvasRenderingContext2D | null>
+  paintingCanvasCtx: Ref<CanvasRenderingContext2D | null>
 ) {
   const { getPosition } = usePosition(paintingCanvas);
 
   let isDrawing = false;
   let isDrawingStopped = false;
 
-  const cancelDrawingStopping = () => {
-    isDrawingStopped = false;
-  };
-
-  onMounted(() => {
-    window.addEventListener("mouseup", cancelDrawingStopping);
-  });
-
-  onUnmounted(() => {
-    window.removeEventListener("mouseup", cancelDrawingStopping);
-  });
-
   const brushStartDrawing = (e: MouseEvent | TouchEvent) => {
     isDrawing = true;
-    canvasCtx.value?.beginPath();
+    paintingCanvasCtx.value?.beginPath();
     brushDraw(e);
+  };
+
+  const brushDraw = (e: MouseEvent | TouchEvent) => {
+    if (isDrawing && paintingCanvasCtx) {
+      const position = getPosition(e);
+      paintingCanvasCtx.value?.lineTo(position.x, position.y);
+      paintingCanvasCtx.value?.stroke();
+    }
   };
 
   const brushEndDrawing = () => {
     isDrawing = false;
-    canvasCtx.value?.closePath();
+    paintingCanvasCtx.value?.closePath();
   };
 
   const brushStopDrawing = () => {
@@ -47,19 +43,16 @@ export default function useBrush(
     }
   };
 
-  const brushDraw = (e: MouseEvent | TouchEvent) => {
-    if (isDrawing && canvasCtx) {
-      const position = getPosition(e);
-      canvasCtx.value?.lineTo(position.x, position.y);
-      canvasCtx.value?.stroke();
-    }
+  const brushCancelDrawingStopping = () => {
+    isDrawingStopped = false;
   };
 
   return {
     brushStartDrawing,
+    brushDraw,
     brushEndDrawing,
     brushStopDrawing,
     brushResumeDrawing,
-    brushDraw,
+    brushCancelDrawingStopping,
   };
 }

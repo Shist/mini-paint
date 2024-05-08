@@ -14,8 +14,8 @@ export default function usePosition(
 
     if (e instanceof TouchEvent) {
       return {
-        x: (e.targetTouches[0].clientX - rect.left) * scaleX,
-        y: (e.targetTouches[0].clientY - rect.top) * scaleY,
+        x: (e.changedTouches[0].clientX - rect.left) * scaleX,
+        y: (e.changedTouches[0].clientY - rect.top) * scaleY,
       };
     } else {
       return {
