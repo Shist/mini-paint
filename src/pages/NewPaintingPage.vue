@@ -100,6 +100,7 @@
       Enter painting description below:
     </label>
     <textarea
+      v-model="description"
       type="text"
       name="description"
       class="new-painting-page__description-textarea"
@@ -107,23 +108,91 @@
       placeholder="Description of the image..."
       required
     ></textarea>
-    <button class="new-painting-page__submit-btn">Submit painting</button>
+    <button
+      class="new-painting-page__submit-btn"
+      @click.prevent="onSubmitBtnClicked"
+      :disabled="isLoading"
+    >
+      Submit painting
+    </button>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref, computed } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import BurgerMenu from "@/components/BurgerMenu.vue";
 import usePaint from "@/composables/usePaint";
+import useToast from "@/composables/useToast";
+import useValidationErrorMsg from "@/composables/useValidationErrorMsg";
+import { uploadUserPainting } from "@/services/firebase";
 import { PAINT_TOOL_BTN_TYPES } from "@/constants";
 
 export default defineComponent({
   name: "new-painting-page",
   components: { BurgerMenu },
   setup() {
-    const paintObj = usePaint();
+    const store = useStore();
+    const router = useRouter();
+    const isLoading = ref(false);
 
-    return { ...paintObj, PAINT_TOOL_BTN_TYPES };
+    const paintObj = usePaint();
+    const { setLoadingToast, setSuccessToast, setErrorToast } = useToast();
+    const { getDescriptionValidationError } = useValidationErrorMsg();
+
+    const description = ref("");
+
+    const userUid = computed(() => store.state.userData.userUid);
+
+    const onSubmitBtnClicked = async () => {
+      const errorMsg = getDescriptionValidationError(description.value);
+
+      if (errorMsg) {
+        setErrorToast(`Error! ${errorMsg}`);
+        return;
+      }
+
+      isLoading.value = true;
+      setLoadingToast("Submitting the painting...");
+      try {
+        const blob: Blob | null = await new Promise((resolve) =>
+          paintObj.paintingCanvas.value?.toBlob(resolve)
+        );
+
+        if (blob === null) {
+          throw new Error(
+            "Error while creating Blob object from canvas: blob is null!"
+          );
+        }
+
+        await uploadUserPainting(userUid.value, blob, description.value);
+
+        description.value = "";
+
+        // TODO: fetch all paintings here
+
+        setSuccessToast("You have successfully submitted the painting!");
+
+        router.push("/");
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setErrorToast(
+            `An error occurred while trying to submit the painting! ${error.message}`
+          );
+        }
+      } finally {
+        isLoading.value = false;
+      }
+    };
+
+    return {
+      isLoading,
+      ...paintObj,
+      description,
+      onSubmitBtnClicked,
+      PAINT_TOOL_BTN_TYPES,
+    };
   },
 });
 </script>

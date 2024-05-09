@@ -99,15 +99,15 @@ export default defineComponent({
     const password = ref("");
     const repeatPassword = ref("");
 
-    const { getValidationError } = useValidationErrorMsg({
-      email,
-      name,
-      password,
-      repeatPassword,
-    });
+    const { getSignUpValidationError } = useValidationErrorMsg();
 
     const onConfirmBtnClicked = async () => {
-      const errorMsg = getValidationError();
+      const errorMsg = getSignUpValidationError({
+        email,
+        name,
+        password,
+        repeatPassword,
+      });
       if (errorMsg) {
         setErrorToast(`Error! ${errorMsg}`);
         return;

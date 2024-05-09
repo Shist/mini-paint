@@ -7,13 +7,13 @@ export interface ISignUpStateRef {
   repeatPassword: Ref<string>;
 }
 
-export default function useValidationErrorMsg({
-  email,
-  name,
-  password,
-  repeatPassword,
-}: ISignUpStateRef) {
-  const getValidationError = () => {
+export default function useValidationErrorMsg() {
+  const getSignUpValidationError = ({
+    email,
+    name,
+    password,
+    repeatPassword,
+  }: ISignUpStateRef) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if (!email.value) {
@@ -41,5 +41,15 @@ export default function useValidationErrorMsg({
     return null;
   };
 
-  return { getValidationError };
+  const getDescriptionValidationError = (description: string) => {
+    if (!description) {
+      return "Description can not be empty!";
+    } else if (description.length > 512) {
+      return "Description can not be longer than 512 characters!";
+    }
+
+    return null;
+  };
+
+  return { getSignUpValidationError, getDescriptionValidationError };
 }

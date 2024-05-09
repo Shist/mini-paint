@@ -7,7 +7,16 @@ import {
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore/lite";
+import {
+  getFirestore,
+  doc,
+  collection,
+  getDoc,
+  setDoc,
+  addDoc,
+} from "firebase/firestore/lite";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 import store from "@/store";
 
 const firebaseApp = initializeApp({
@@ -79,10 +88,38 @@ async function loadUserNameByUid(userUid: string | null) {
   store.commit.userData.setUserName(docData ? docData.name : "(empty)");
 }
 
+async function uploadUserPainting(
+  userUid: string | null,
+  paintingBlob: Blob,
+  paintingDescription: string
+) {
+  if (userUid === null) {
+    throw new Error("Can not upload user painting: 'userUid' value is null!");
+  }
+
+  const paintingRef = `paintings/${userUid}/${uuidv4()}`;
+
+  const storage = getStorage();
+  const storageRef = ref(storage, paintingRef);
+  await uploadBytes(storageRef, paintingBlob);
+
+  const db = getFirestore();
+  const userPaintingsCollection = collection(db, "users", userUid, "paintings");
+
+  const paintingData = {
+    date: new Date(),
+    description: paintingDescription,
+    imgUrl: paintingRef,
+  };
+
+  await addDoc(userPaintingsCollection, paintingData);
+}
+
 export {
   onFirebaseAuthStateChanged,
   signUpUser,
   signInUser,
   signOutUser,
   loadUserNameByUid,
+  uploadUserPainting,
 };

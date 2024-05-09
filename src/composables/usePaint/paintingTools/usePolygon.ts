@@ -19,7 +19,7 @@ export default function usePolygon(
   let isStartSet = false;
 
   let isClickDouble = false;
-  let doubleClickTimerId = null as number | null;
+  let doubleClickTimerId = null as ReturnType<typeof setTimeout> | null;
 
   const drawPolygonPart = (
     ctx: Ref<CanvasRenderingContext2D | null>,
