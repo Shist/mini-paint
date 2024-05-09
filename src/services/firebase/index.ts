@@ -12,12 +12,19 @@ import {
   doc,
   collection,
   getDoc,
+  getDocs,
   setDoc,
   addDoc,
 } from "firebase/firestore/lite";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import store from "@/store";
+
+export interface IUserPainting {
+  date: Date;
+  description: string;
+  imgUrl: string;
+}
 
 const firebaseApp = initializeApp({
   apiKey: process.env.VUE_APP_API_KEY,
@@ -88,6 +95,37 @@ async function loadUserNameByUid(userUid: string | null) {
   store.commit.userData.setUserName(docData ? docData.name : "(empty)");
 }
 
+async function loadAllUsersPaintings() {
+  const db = getFirestore();
+
+  const usersCollectionRef = collection(db, "users");
+  const usersSnapshot = await getDocs(usersCollectionRef);
+
+  //const paintingsList = [];
+
+  for (const userDoc of usersSnapshot.docs) {
+    const paintingsCollectionRef = collection(
+      db,
+      `users/${userDoc.id}/paintings`
+    );
+    const paintingsSnapshot = await getDocs(paintingsCollectionRef);
+
+    const userPaintings: IUserPainting[] = [];
+    paintingsSnapshot.forEach((paintingDoc) => {
+      userPaintings.push(paintingDoc.data() as IUserPainting);
+    });
+
+    console.log({
+      ...userDoc.data(),
+      paintings: userPaintings,
+    });
+
+    ///tasksList.push({ id: doc.id, ...doc.data() });
+  }
+
+  //store.commit("userData/setUserTasks", tasksList);
+}
+
 async function uploadUserPainting(
   userUid: string | null,
   paintingBlob: Blob,
@@ -106,7 +144,7 @@ async function uploadUserPainting(
   const db = getFirestore();
   const userPaintingsCollection = collection(db, "users", userUid, "paintings");
 
-  const paintingData = {
+  const paintingData: IUserPainting = {
     date: new Date(),
     description: paintingDescription,
     imgUrl: paintingRef,
@@ -121,5 +159,6 @@ export {
   signInUser,
   signOutUser,
   loadUserNameByUid,
+  loadAllUsersPaintings,
   uploadUserPainting,
 };

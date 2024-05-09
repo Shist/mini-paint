@@ -126,7 +126,7 @@ import BurgerMenu from "@/components/BurgerMenu.vue";
 import usePaint from "@/composables/usePaint";
 import useToast from "@/composables/useToast";
 import useValidationErrorMsg from "@/composables/useValidationErrorMsg";
-import { uploadUserPainting } from "@/services/firebase";
+import { uploadUserPainting, loadAllUsersPaintings } from "@/services/firebase";
 import { PAINT_TOOL_BTN_TYPES } from "@/constants";
 
 export default defineComponent({
@@ -170,7 +170,7 @@ export default defineComponent({
 
         description.value = "";
 
-        // TODO: fetch all paintings here
+        await loadAllUsersPaintings();
 
         setSuccessToast("You have successfully submitted the painting!");
 
