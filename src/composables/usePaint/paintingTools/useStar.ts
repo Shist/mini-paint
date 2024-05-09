@@ -1,5 +1,6 @@
 import { Ref } from "vue";
 import usePosition from "@/composables/usePaint/usePosition";
+import useClearPreview from "@/composables/usePaint/useClearPreview";
 
 export default function useStar(
   paintingCanvas: Ref<HTMLCanvasElement | null>,
@@ -8,6 +9,10 @@ export default function useStar(
   previewCanvasCtx: Ref<CanvasRenderingContext2D | null>
 ) {
   const { getPosition } = usePosition(paintingCanvas);
+  const { clearPreviewCanvas } = useClearPreview(
+    previewCanvas,
+    previewCanvasCtx
+  );
 
   let startPosition = { x: 0, y: 0 };
   let isStartSet = false;
@@ -58,6 +63,8 @@ export default function useStar(
       return;
     }
 
+    clearPreviewCanvas();
+
     const newPosition = getPosition(e);
     const radiusX = Math.abs((newPosition.x - startPosition.x) / 2);
     const radiusY = Math.abs((newPosition.y - startPosition.y) / 2);
@@ -70,13 +77,6 @@ export default function useStar(
         ? startPosition.y + radiusY
         : startPosition.y - radiusY;
 
-    previewCanvasCtx.value?.clearRect(
-      0,
-      0,
-      previewCanvas.value ? previewCanvas.value?.width : 0,
-      previewCanvas.value ? previewCanvas.value?.height : 0
-    );
-
     drawStar(previewCanvasCtx, centerX, centerY, radiusX, radiusY);
   };
 
@@ -85,12 +85,8 @@ export default function useStar(
       return;
     }
 
-    previewCanvasCtx.value?.clearRect(
-      0,
-      0,
-      previewCanvas.value ? previewCanvas.value?.width : 0,
-      previewCanvas.value ? previewCanvas.value?.height : 0
-    );
+    clearPreviewCanvas();
+
     const newPosition = getPosition(e);
     const radiusX = Math.abs((newPosition.x - startPosition.x) / 2);
     const radiusY = Math.abs((newPosition.y - startPosition.y) / 2);

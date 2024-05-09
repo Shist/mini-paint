@@ -1,5 +1,6 @@
 import { Ref } from "vue";
 import usePosition from "@/composables/usePaint/usePosition";
+import useClearPreview from "@/composables/usePaint/useClearPreview";
 
 export default function usePolygon(
   paintingCanvas: Ref<HTMLCanvasElement | null>,
@@ -8,6 +9,10 @@ export default function usePolygon(
   previewCanvasCtx: Ref<CanvasRenderingContext2D | null>
 ) {
   const { getPosition } = usePosition(paintingCanvas);
+  const { clearPreviewCanvas } = useClearPreview(
+    previewCanvas,
+    previewCanvasCtx
+  );
 
   let startPosition = { x: 0, y: 0 };
   let currPosition = { x: 0, y: 0 };
@@ -31,12 +36,7 @@ export default function usePolygon(
       return;
     }
 
-    previewCanvasCtx.value?.clearRect(
-      0,
-      0,
-      previewCanvas.value ? previewCanvas.value?.width : 0,
-      previewCanvas.value ? previewCanvas.value?.height : 0
-    );
+    clearPreviewCanvas();
 
     const newPosition = getPosition(e);
 
@@ -52,12 +52,7 @@ export default function usePolygon(
       return;
     }
 
-    previewCanvasCtx.value?.clearRect(
-      0,
-      0,
-      previewCanvas.value ? previewCanvas.value?.width : 0,
-      previewCanvas.value ? previewCanvas.value?.height : 0
-    );
+    clearPreviewCanvas();
 
     const newPosition = getPosition(e);
 

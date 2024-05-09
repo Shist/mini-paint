@@ -1,5 +1,6 @@
 import { Ref } from "vue";
 import usePosition from "@/composables/usePaint/usePosition";
+import useClearPreview from "@/composables/usePaint/useClearPreview";
 
 export default function useLine(
   paintingCanvas: Ref<HTMLCanvasElement | null>,
@@ -8,6 +9,10 @@ export default function useLine(
   previewCanvasCtx: Ref<CanvasRenderingContext2D | null>
 ) {
   const { getPosition } = usePosition(paintingCanvas);
+  const { clearPreviewCanvas } = useClearPreview(
+    previewCanvas,
+    previewCanvasCtx
+  );
 
   let startPosition = { x: 0, y: 0 };
   let isStartSet = false;
@@ -22,12 +27,7 @@ export default function useLine(
       return;
     }
 
-    previewCanvasCtx.value?.clearRect(
-      0,
-      0,
-      previewCanvas.value ? previewCanvas.value?.width : 0,
-      previewCanvas.value ? previewCanvas.value?.height : 0
-    );
+    clearPreviewCanvas();
 
     const newPosition = getPosition(e);
 
@@ -38,17 +38,12 @@ export default function useLine(
     previewCanvasCtx.value?.closePath();
   };
 
-  function lineEndDrawing(e: MouseEvent | TouchEvent) {
+  const lineEndDrawing = (e: MouseEvent | TouchEvent) => {
     if (!isStartSet) {
       return;
     }
 
-    previewCanvasCtx.value?.clearRect(
-      0,
-      0,
-      previewCanvas.value ? previewCanvas.value?.width : 0,
-      previewCanvas.value ? previewCanvas.value?.height : 0
-    );
+    clearPreviewCanvas();
 
     const newPosition = getPosition(e);
 
@@ -59,7 +54,7 @@ export default function useLine(
     paintingCanvasCtx.value?.closePath();
 
     isStartSet = false;
-  }
+  };
 
   return {
     lineStartDrawing,

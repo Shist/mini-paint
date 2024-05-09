@@ -1,11 +1,11 @@
 import { ref, Ref, onMounted, onUnmounted, watch } from "vue";
 import { PAINT_TOOL_BTN_TYPES } from "@/constants";
-import useBrush from "@/composables/usePaint/useBrush";
-import useLine from "@/composables/usePaint/useLine";
-import useEllipse from "@/composables/usePaint/useEllipse";
-import useRectangle from "@/composables/usePaint/useRectangle";
-import useStar from "@/composables/usePaint/useStar";
-import usePolygon from "@/composables/usePaint/usePolygon";
+import useBrush from "@/composables/usePaint/paintingTools/useBrush";
+import useLine from "@/composables/usePaint/paintingTools/useLine";
+import useEllipse from "@/composables/usePaint/paintingTools/useEllipse";
+import useRectangle from "@/composables/usePaint/paintingTools/useRectangle";
+import useStar from "@/composables/usePaint/paintingTools/useStar";
+import usePolygon from "@/composables/usePaint/paintingTools/usePolygon";
 
 export default function usePaint() {
   const paintingCanvas = ref(null) as Ref<HTMLCanvasElement | null>;
@@ -91,36 +91,35 @@ export default function usePaint() {
     }
   };
 
+  const initCanvasSettings = (
+    canvas: Ref<HTMLCanvasElement | null>,
+    canvasCtx: Ref<CanvasRenderingContext2D | null>
+  ) => {
+    if (!canvas.value) {
+      return;
+    }
+
+    const canvasRect = canvas.value.getBoundingClientRect();
+    canvas.value.width = canvasRect.width;
+    canvas.value.height = canvasRect.height;
+
+    canvasCtx.value = canvas.value.getContext("2d");
+
+    if (!canvasCtx.value) {
+      return;
+    }
+
+    canvasCtx.value.lineCap = "round";
+    canvasCtx.value.strokeStyle = brushColor.value;
+    canvasCtx.value.lineWidth = Number(brushWidth.value);
+  };
+
   onMounted(() => {
     window.addEventListener("mouseup", handleMouseUpOutsideCanvas);
 
-    if (!paintingCanvas.value || !previewCanvas.value) {
-      return;
-    }
+    initCanvasSettings(paintingCanvas, paintingCanvasCtx);
 
-    const paintingCanvasRect = paintingCanvas.value.getBoundingClientRect();
-    paintingCanvas.value.width = paintingCanvasRect.width;
-    paintingCanvas.value.height = paintingCanvasRect.height;
-
-    const previewCanvasRect = previewCanvas.value.getBoundingClientRect();
-    previewCanvas.value.width = previewCanvasRect.width;
-    previewCanvas.value.height = previewCanvasRect.height;
-
-    paintingCanvasCtx.value = paintingCanvas.value.getContext("2d");
-
-    previewCanvasCtx.value = previewCanvas.value.getContext("2d");
-
-    if (!paintingCanvasCtx.value || !previewCanvasCtx.value) {
-      return;
-    }
-
-    paintingCanvasCtx.value.lineCap = "round";
-    paintingCanvasCtx.value.strokeStyle = brushColor.value;
-    paintingCanvasCtx.value.lineWidth = Number(brushWidth.value);
-
-    previewCanvasCtx.value.lineCap = "round";
-    previewCanvasCtx.value.strokeStyle = brushColor.value;
-    previewCanvasCtx.value.lineWidth = Number(brushWidth.value);
+    initCanvasSettings(previewCanvas, previewCanvasCtx);
   });
 
   onUnmounted(() => {
