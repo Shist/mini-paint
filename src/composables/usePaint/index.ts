@@ -1,10 +1,11 @@
 import { ref, Ref, onMounted, onUnmounted, watch } from "vue";
 import { PAINT_TOOL_BTN_TYPES } from "@/constants";
 import useBrush from "@/composables/usePaint/paintingTools/useBrush";
-import useLine from "@/composables/usePaint/paintingTools/useLine";
-import useEllipse from "@/composables/usePaint/paintingTools/useEllipse";
-import useRectangle from "@/composables/usePaint/paintingTools/useRectangle";
-import useStar from "@/composables/usePaint/paintingTools/useStar";
+import useFigure from "@/composables/usePaint/paintingTools/useFigure";
+import useLine from "@/composables/usePaint/paintingTools/useFigure/useLine";
+import useEllipse from "@/composables/usePaint/paintingTools/useFigure/useEllipse";
+import useRectangle from "@/composables/usePaint/paintingTools/useFigure/useRectangle";
+import useStar from "@/composables/usePaint/paintingTools/useFigure/useStar";
 import usePolygon from "@/composables/usePaint/paintingTools/usePolygon";
 
 export default function usePaint() {
@@ -26,34 +27,56 @@ export default function usePaint() {
     brushCancelDrawingStopping,
   } = useBrush(paintingCanvas, paintingCanvasCtx);
 
-  const { lineStartDrawing, lineEndDrawing, lineDrawPreview } = useLine(
+  const { drawLine } = useLine();
+  const {
+    figureStartDrawing: lineStartDrawing,
+    figureDrawPreview: lineDrawPreview,
+    figureEndDrawing: lineEndDrawing,
+  } = useFigure(
     paintingCanvas,
     paintingCanvasCtx,
     previewCanvas,
-    previewCanvasCtx
+    previewCanvasCtx,
+    drawLine
   );
 
-  const { ellipseStartDrawing, ellipseDrawPreview, ellipseEndDrawing } =
-    useEllipse(
-      paintingCanvas,
-      paintingCanvasCtx,
-      previewCanvas,
-      previewCanvasCtx
-    );
-
-  const { rectangleStartDrawing, rectangleDrawPreview, rectangleEndDrawing } =
-    useRectangle(
-      paintingCanvas,
-      paintingCanvasCtx,
-      previewCanvas,
-      previewCanvasCtx
-    );
-
-  const { starStartDrawing, starDrawPreview, starEndDrawing } = useStar(
+  const { drawEllipse } = useEllipse();
+  const {
+    figureStartDrawing: ellipseStartDrawing,
+    figureDrawPreview: ellipseDrawPreview,
+    figureEndDrawing: ellipseEndDrawing,
+  } = useFigure(
     paintingCanvas,
     paintingCanvasCtx,
     previewCanvas,
-    previewCanvasCtx
+    previewCanvasCtx,
+    drawEllipse
+  );
+
+  const { drawRectangle } = useRectangle();
+  const {
+    figureStartDrawing: rectangleStartDrawing,
+    figureDrawPreview: rectangleDrawPreview,
+    figureEndDrawing: rectangleEndDrawing,
+  } = useFigure(
+    paintingCanvas,
+    paintingCanvasCtx,
+    previewCanvas,
+    previewCanvasCtx,
+    drawRectangle
+  );
+
+  const { drawStar } = useStar();
+  const {
+    figureStartDrawing: starStartDrawing,
+    figureDrawPreview: starDrawPreview,
+    figureEndDrawing: starEndDrawing,
+  } = useFigure(
+    paintingCanvas,
+    paintingCanvasCtx,
+    previewCanvas,
+    previewCanvasCtx,
+    drawStar
   );
 
   const {
