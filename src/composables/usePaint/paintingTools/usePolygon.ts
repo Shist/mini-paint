@@ -21,6 +21,24 @@ export default function usePolygon(
   let isClickDouble = false;
   let doubleClickTimerId = null as number | null;
 
+  const drawPolygonPart = (
+    ctx: Ref<CanvasRenderingContext2D | null>,
+    newPosition?: { x: number; y: number }
+  ) => {
+    ctx.value?.beginPath();
+
+    if (newPosition) {
+      ctx.value?.moveTo(currPosition.x, currPosition.y);
+      ctx.value?.lineTo(newPosition.x, newPosition.y);
+    } else {
+      ctx.value?.moveTo(startPosition.x, startPosition.y);
+      ctx.value?.lineTo(currPosition.x, currPosition.y);
+    }
+
+    ctx.value?.stroke();
+    ctx.value?.closePath();
+  };
+
   const polygonStartDrawing = (e: MouseEvent | TouchEvent) => {
     if (isStartSet) {
       return;
@@ -38,13 +56,7 @@ export default function usePolygon(
 
     clearPreviewCanvas();
 
-    const newPosition = getPosition(e);
-
-    previewCanvasCtx.value?.beginPath();
-    previewCanvasCtx.value?.moveTo(currPosition.x, currPosition.y);
-    previewCanvasCtx.value?.lineTo(newPosition.x, newPosition.y);
-    previewCanvasCtx.value?.stroke();
-    previewCanvasCtx.value?.closePath();
+    drawPolygonPart(previewCanvasCtx, getPosition(e));
   };
 
   const polygonEndDrawing = (e: MouseEvent | TouchEvent) => {
@@ -56,11 +68,7 @@ export default function usePolygon(
 
     const newPosition = getPosition(e);
 
-    paintingCanvasCtx.value?.beginPath();
-    paintingCanvasCtx.value?.moveTo(currPosition.x, currPosition.y);
-    paintingCanvasCtx.value?.lineTo(newPosition.x, newPosition.y);
-    paintingCanvasCtx.value?.stroke();
-    paintingCanvasCtx.value?.closePath();
+    drawPolygonPart(paintingCanvasCtx, newPosition);
 
     currPosition = newPosition;
 
@@ -78,11 +86,7 @@ export default function usePolygon(
   };
 
   const polygonEndAllDrawing = () => {
-    paintingCanvasCtx.value?.beginPath();
-    paintingCanvasCtx.value?.moveTo(startPosition.x, startPosition.y);
-    paintingCanvasCtx.value?.lineTo(currPosition.x, currPosition.y);
-    paintingCanvasCtx.value?.stroke();
-    paintingCanvasCtx.value?.closePath();
+    drawPolygonPart(paintingCanvasCtx);
 
     isStartSet = false;
     isClickDouble = false;
