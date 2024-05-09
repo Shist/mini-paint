@@ -17,6 +17,19 @@ export default function useLine(
   let startPosition = { x: 0, y: 0 };
   let isStartSet = false;
 
+  const drawLine = (
+    e: MouseEvent | TouchEvent,
+    ctx: Ref<CanvasRenderingContext2D | null>
+  ) => {
+    const newPosition = getPosition(e);
+
+    ctx.value?.beginPath();
+    ctx.value?.moveTo(startPosition.x, startPosition.y);
+    ctx.value?.lineTo(newPosition.x, newPosition.y);
+    ctx.value?.stroke();
+    ctx.value?.closePath();
+  };
+
   const lineStartDrawing = (e: MouseEvent | TouchEvent) => {
     startPosition = getPosition(e);
     isStartSet = true;
@@ -29,13 +42,7 @@ export default function useLine(
 
     clearPreviewCanvas();
 
-    const newPosition = getPosition(e);
-
-    previewCanvasCtx.value?.beginPath();
-    previewCanvasCtx.value?.moveTo(startPosition.x, startPosition.y);
-    previewCanvasCtx.value?.lineTo(newPosition.x, newPosition.y);
-    previewCanvasCtx.value?.stroke();
-    previewCanvasCtx.value?.closePath();
+    drawLine(e, previewCanvasCtx);
   };
 
   const lineEndDrawing = (e: MouseEvent | TouchEvent) => {
@@ -45,13 +52,7 @@ export default function useLine(
 
     clearPreviewCanvas();
 
-    const newPosition = getPosition(e);
-
-    paintingCanvasCtx.value?.beginPath();
-    paintingCanvasCtx.value?.moveTo(startPosition.x, startPosition.y);
-    paintingCanvasCtx.value?.lineTo(newPosition.x, newPosition.y);
-    paintingCanvasCtx.value?.stroke();
-    paintingCanvasCtx.value?.closePath();
+    drawLine(e, paintingCanvasCtx);
 
     isStartSet = false;
   };
