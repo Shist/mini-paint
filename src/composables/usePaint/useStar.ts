@@ -54,28 +54,30 @@ export default function useStar(
   };
 
   const starDrawPreview = (e: MouseEvent | TouchEvent) => {
-    if (isStartSet && paintingCanvasCtx) {
-      const newPosition = getPosition(e);
-      const radiusX = Math.abs((newPosition.x - startPosition.x) / 2);
-      const radiusY = Math.abs((newPosition.y - startPosition.y) / 2);
-      const centerX =
-        newPosition.x > startPosition.x
-          ? startPosition.x + radiusX
-          : startPosition.x - radiusX;
-      const centerY =
-        newPosition.y > startPosition.y
-          ? startPosition.y + radiusY
-          : startPosition.y - radiusY;
-
-      previewCanvasCtx.value?.clearRect(
-        0,
-        0,
-        previewCanvas.value ? previewCanvas.value?.width : 0,
-        previewCanvas.value ? previewCanvas.value?.height : 0
-      );
-
-      drawStar(previewCanvasCtx, centerX, centerY, radiusX, radiusY);
+    if (!isStartSet) {
+      return;
     }
+
+    const newPosition = getPosition(e);
+    const radiusX = Math.abs((newPosition.x - startPosition.x) / 2);
+    const radiusY = Math.abs((newPosition.y - startPosition.y) / 2);
+    const centerX =
+      newPosition.x > startPosition.x
+        ? startPosition.x + radiusX
+        : startPosition.x - radiusX;
+    const centerY =
+      newPosition.y > startPosition.y
+        ? startPosition.y + radiusY
+        : startPosition.y - radiusY;
+
+    previewCanvasCtx.value?.clearRect(
+      0,
+      0,
+      previewCanvas.value ? previewCanvas.value?.width : 0,
+      previewCanvas.value ? previewCanvas.value?.height : 0
+    );
+
+    drawStar(previewCanvasCtx, centerX, centerY, radiusX, radiusY);
   };
 
   function starEndDrawing(e: MouseEvent | TouchEvent) {
@@ -89,8 +91,6 @@ export default function useStar(
       previewCanvas.value ? previewCanvas.value?.width : 0,
       previewCanvas.value ? previewCanvas.value?.height : 0
     );
-
-    isStartSet = false;
     const newPosition = getPosition(e);
     const radiusX = Math.abs((newPosition.x - startPosition.x) / 2);
     const radiusY = Math.abs((newPosition.y - startPosition.y) / 2);
@@ -104,6 +104,8 @@ export default function useStar(
         : startPosition.y - radiusY;
 
     drawStar(paintingCanvasCtx, centerX, centerY, radiusX, radiusY);
+
+    isStartSet = false;
   }
 
   return {

@@ -1,7 +1,7 @@
 import { Ref } from "vue";
 import usePosition from "@/composables/usePaint/usePosition";
 
-export default function useLine(
+export default function usePolygon(
   paintingCanvas: Ref<HTMLCanvasElement | null>,
   paintingCanvasCtx: Ref<CanvasRenderingContext2D | null>,
   previewCanvas: Ref<HTMLCanvasElement | null>,
@@ -10,14 +10,23 @@ export default function useLine(
   const { getPosition } = usePosition(paintingCanvas);
 
   let startPosition = { x: 0, y: 0 };
+  let currPosition = { x: 0, y: 0 };
   let isStartSet = false;
 
-  const lineStartDrawing = (e: MouseEvent | TouchEvent) => {
+  let isClickDouble = false;
+  let doubleClickTimerId = null as number | null;
+
+  const polygonStartDrawing = (e: MouseEvent | TouchEvent) => {
+    if (isStartSet) {
+      return;
+    }
+
     startPosition = getPosition(e);
+    currPosition = startPosition;
     isStartSet = true;
   };
 
-  const lineDrawPreview = (e: MouseEvent | TouchEvent) => {
+  const polygonDrawPreview = (e: MouseEvent | TouchEvent) => {
     if (!isStartSet) {
       return;
     }
@@ -32,13 +41,13 @@ export default function useLine(
     const newPosition = getPosition(e);
 
     previewCanvasCtx.value?.beginPath();
-    previewCanvasCtx.value?.moveTo(startPosition.x, startPosition.y);
+    previewCanvasCtx.value?.moveTo(currPosition.x, currPosition.y);
     previewCanvasCtx.value?.lineTo(newPosition.x, newPosition.y);
     previewCanvasCtx.value?.stroke();
     previewCanvasCtx.value?.closePath();
   };
 
-  function lineEndDrawing(e: MouseEvent | TouchEvent) {
+  const polygonEndDrawing = (e: MouseEvent | TouchEvent) => {
     if (!isStartSet) {
       return;
     }
@@ -53,17 +62,41 @@ export default function useLine(
     const newPosition = getPosition(e);
 
     paintingCanvasCtx.value?.beginPath();
-    paintingCanvasCtx.value?.moveTo(startPosition.x, startPosition.y);
+    paintingCanvasCtx.value?.moveTo(currPosition.x, currPosition.y);
     paintingCanvasCtx.value?.lineTo(newPosition.x, newPosition.y);
     paintingCanvasCtx.value?.stroke();
     paintingCanvasCtx.value?.closePath();
 
+    currPosition = newPosition;
+
+    if (doubleClickTimerId) {
+      clearTimeout(doubleClickTimerId);
+      doubleClickTimerId = null;
+    }
+
+    if (isClickDouble) {
+      polygonEndAllDrawing();
+    } else {
+      isClickDouble = true;
+      doubleClickTimerId = setTimeout(() => (isClickDouble = false), 300);
+    }
+  };
+
+  const polygonEndAllDrawing = () => {
+    paintingCanvasCtx.value?.beginPath();
+    paintingCanvasCtx.value?.moveTo(startPosition.x, startPosition.y);
+    paintingCanvasCtx.value?.lineTo(currPosition.x, currPosition.y);
+    paintingCanvasCtx.value?.stroke();
+    paintingCanvasCtx.value?.closePath();
+
     isStartSet = false;
-  }
+    isClickDouble = false;
+  };
 
   return {
-    lineStartDrawing,
-    lineEndDrawing,
-    lineDrawPreview,
+    polygonStartDrawing,
+    polygonDrawPreview,
+    polygonEndDrawing,
+    polygonEndAllDrawing,
   };
 }

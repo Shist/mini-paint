@@ -18,26 +18,30 @@ export default function useRectangle(
   };
 
   const rectangleDrawPreview = (e: MouseEvent | TouchEvent) => {
-    if (isStartSet && paintingCanvasCtx) {
-      const newPosition = getPosition(e);
-      const rectangleWidth = newPosition.x - startPosition.x;
-      const rectangleHeight = newPosition.y - startPosition.y;
-      previewCanvasCtx.value?.clearRect(
-        0,
-        0,
-        previewCanvas.value ? previewCanvas.value?.width : 0,
-        previewCanvas.value ? previewCanvas.value?.height : 0
-      );
-      previewCanvasCtx.value?.beginPath();
-      previewCanvasCtx.value?.rect(
-        startPosition.x,
-        startPosition.y,
-        rectangleWidth,
-        rectangleHeight
-      );
-      previewCanvasCtx.value?.stroke();
-      previewCanvasCtx.value?.closePath();
+    if (!isStartSet) {
+      return;
     }
+
+    previewCanvasCtx.value?.clearRect(
+      0,
+      0,
+      previewCanvas.value ? previewCanvas.value?.width : 0,
+      previewCanvas.value ? previewCanvas.value?.height : 0
+    );
+
+    const newPosition = getPosition(e);
+    const rectangleWidth = newPosition.x - startPosition.x;
+    const rectangleHeight = newPosition.y - startPosition.y;
+
+    previewCanvasCtx.value?.beginPath();
+    previewCanvasCtx.value?.rect(
+      startPosition.x,
+      startPosition.y,
+      rectangleWidth,
+      rectangleHeight
+    );
+    previewCanvasCtx.value?.stroke();
+    previewCanvasCtx.value?.closePath();
   };
 
   function rectangleEndDrawing(e: MouseEvent | TouchEvent) {
@@ -52,7 +56,6 @@ export default function useRectangle(
       previewCanvas.value ? previewCanvas.value?.height : 0
     );
 
-    isStartSet = false;
     const newPosition = getPosition(e);
     const rectangleWidth = newPosition.x - startPosition.x;
     const rectangleHeight = newPosition.y - startPosition.y;
@@ -66,6 +69,8 @@ export default function useRectangle(
     );
     paintingCanvasCtx.value?.stroke();
     paintingCanvasCtx.value?.closePath();
+
+    isStartSet = false;
   }
 
   return {

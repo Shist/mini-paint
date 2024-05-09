@@ -17,7 +17,7 @@ export default function useBrush(
   };
 
   const brushDraw = (e: MouseEvent | TouchEvent) => {
-    if (isDrawing && paintingCanvasCtx) {
+    if (isDrawing) {
       const position = getPosition(e);
       paintingCanvasCtx.value?.lineTo(position.x, position.y);
       paintingCanvasCtx.value?.stroke();

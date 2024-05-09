@@ -5,6 +5,7 @@ import useLine from "@/composables/usePaint/useLine";
 import useEllipse from "@/composables/usePaint/useEllipse";
 import useRectangle from "@/composables/usePaint/useRectangle";
 import useStar from "@/composables/usePaint/useStar";
+import usePolygon from "@/composables/usePaint/usePolygon";
 
 export default function usePaint() {
   const paintingCanvas = ref(null) as Ref<HTMLCanvasElement | null>;
@@ -55,6 +56,18 @@ export default function usePaint() {
     previewCanvasCtx
   );
 
+  const {
+    polygonStartDrawing,
+    polygonDrawPreview,
+    polygonEndDrawing,
+    polygonEndAllDrawing,
+  } = usePolygon(
+    paintingCanvas,
+    paintingCanvasCtx,
+    previewCanvas,
+    previewCanvasCtx
+  );
+
   const handleMouseUpOutsideCanvas = (e: MouseEvent) => {
     switch (activeToolBtn.value) {
       case PAINT_TOOL_BTN_TYPES.BRUSH:
@@ -73,6 +86,7 @@ export default function usePaint() {
         starEndDrawing(e);
         break;
       case PAINT_TOOL_BTN_TYPES.POLYGON:
+        polygonEndDrawing(e);
         break;
     }
   };
@@ -129,6 +143,12 @@ export default function usePaint() {
     }
   });
 
+  watch(activeToolBtn, (newValue, oldValue) => {
+    if (oldValue === PAINT_TOOL_BTN_TYPES.POLYGON) {
+      polygonEndAllDrawing();
+    }
+  });
+
   const onClickDown = (e: MouseEvent | TouchEvent) => {
     switch (activeToolBtn.value) {
       case PAINT_TOOL_BTN_TYPES.BRUSH:
@@ -147,64 +167,7 @@ export default function usePaint() {
         starStartDrawing(e);
         break;
       case PAINT_TOOL_BTN_TYPES.POLYGON:
-        break;
-    }
-  };
-
-  const onClickUp = (e: MouseEvent | TouchEvent) => {
-    switch (activeToolBtn.value) {
-      case PAINT_TOOL_BTN_TYPES.BRUSH:
-        brushEndDrawing();
-        break;
-      case PAINT_TOOL_BTN_TYPES.LINE:
-        lineEndDrawing(e);
-        break;
-      case PAINT_TOOL_BTN_TYPES.ELLIPSE:
-        ellipseEndDrawing(e);
-        break;
-      case PAINT_TOOL_BTN_TYPES.RECTANGLE:
-        rectangleEndDrawing(e);
-        break;
-      case PAINT_TOOL_BTN_TYPES.STAR:
-        starEndDrawing(e);
-        break;
-      case PAINT_TOOL_BTN_TYPES.POLYGON:
-        break;
-    }
-  };
-
-  const onMouseLeave = () => {
-    switch (activeToolBtn.value) {
-      case PAINT_TOOL_BTN_TYPES.BRUSH:
-        brushStopDrawing();
-        break;
-      case PAINT_TOOL_BTN_TYPES.LINE:
-        break;
-      case PAINT_TOOL_BTN_TYPES.ELLIPSE:
-        break;
-      case PAINT_TOOL_BTN_TYPES.RECTANGLE:
-        break;
-      case PAINT_TOOL_BTN_TYPES.STAR:
-        break;
-      case PAINT_TOOL_BTN_TYPES.POLYGON:
-        break;
-    }
-  };
-
-  const onMouseEnter = (e: MouseEvent | TouchEvent) => {
-    switch (activeToolBtn.value) {
-      case PAINT_TOOL_BTN_TYPES.BRUSH:
-        brushResumeDrawing(e);
-        break;
-      case PAINT_TOOL_BTN_TYPES.LINE:
-        break;
-      case PAINT_TOOL_BTN_TYPES.ELLIPSE:
-        break;
-      case PAINT_TOOL_BTN_TYPES.RECTANGLE:
-        break;
-      case PAINT_TOOL_BTN_TYPES.STAR:
-        break;
-      case PAINT_TOOL_BTN_TYPES.POLYGON:
+        polygonStartDrawing(e);
         break;
     }
   };
@@ -227,7 +190,43 @@ export default function usePaint() {
         starDrawPreview(e);
         break;
       case PAINT_TOOL_BTN_TYPES.POLYGON:
+        polygonDrawPreview(e);
         break;
+    }
+  };
+
+  const onClickUp = (e: MouseEvent | TouchEvent) => {
+    switch (activeToolBtn.value) {
+      case PAINT_TOOL_BTN_TYPES.BRUSH:
+        brushEndDrawing();
+        break;
+      case PAINT_TOOL_BTN_TYPES.LINE:
+        lineEndDrawing(e);
+        break;
+      case PAINT_TOOL_BTN_TYPES.ELLIPSE:
+        ellipseEndDrawing(e);
+        break;
+      case PAINT_TOOL_BTN_TYPES.RECTANGLE:
+        rectangleEndDrawing(e);
+        break;
+      case PAINT_TOOL_BTN_TYPES.STAR:
+        starEndDrawing(e);
+        break;
+      case PAINT_TOOL_BTN_TYPES.POLYGON:
+        polygonEndDrawing(e);
+        break;
+    }
+  };
+
+  const onMouseLeave = () => {
+    if (activeToolBtn.value === PAINT_TOOL_BTN_TYPES.BRUSH) {
+      brushStopDrawing();
+    }
+  };
+
+  const onMouseEnter = (e: MouseEvent | TouchEvent) => {
+    if (activeToolBtn.value === PAINT_TOOL_BTN_TYPES.BRUSH) {
+      brushResumeDrawing(e);
     }
   };
 
@@ -238,9 +237,9 @@ export default function usePaint() {
     brushWidth,
     activeToolBtn,
     onClickDown,
+    onMove,
     onClickUp,
     onMouseLeave,
     onMouseEnter,
-    onMove,
   };
 }
