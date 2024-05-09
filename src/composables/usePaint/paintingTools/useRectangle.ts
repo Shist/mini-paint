@@ -17,6 +17,26 @@ export default function useRectangle(
   let startPosition = { x: 0, y: 0 };
   let isStartSet = false;
 
+  const drawRectangle = (
+    e: MouseEvent | TouchEvent,
+    ctx: Ref<CanvasRenderingContext2D | null>
+  ) => {
+    const newPosition = getPosition(e);
+
+    const rectangleWidth = newPosition.x - startPosition.x;
+    const rectangleHeight = newPosition.y - startPosition.y;
+
+    ctx.value?.beginPath();
+    ctx.value?.rect(
+      startPosition.x,
+      startPosition.y,
+      rectangleWidth,
+      rectangleHeight
+    );
+    ctx.value?.stroke();
+    ctx.value?.closePath();
+  };
+
   const rectangleStartDrawing = (e: MouseEvent | TouchEvent) => {
     startPosition = getPosition(e);
     isStartSet = true;
@@ -29,19 +49,7 @@ export default function useRectangle(
 
     clearPreviewCanvas();
 
-    const newPosition = getPosition(e);
-    const rectangleWidth = newPosition.x - startPosition.x;
-    const rectangleHeight = newPosition.y - startPosition.y;
-
-    previewCanvasCtx.value?.beginPath();
-    previewCanvasCtx.value?.rect(
-      startPosition.x,
-      startPosition.y,
-      rectangleWidth,
-      rectangleHeight
-    );
-    previewCanvasCtx.value?.stroke();
-    previewCanvasCtx.value?.closePath();
+    drawRectangle(e, previewCanvasCtx);
   };
 
   function rectangleEndDrawing(e: MouseEvent | TouchEvent) {
@@ -51,19 +59,7 @@ export default function useRectangle(
 
     clearPreviewCanvas();
 
-    const newPosition = getPosition(e);
-    const rectangleWidth = newPosition.x - startPosition.x;
-    const rectangleHeight = newPosition.y - startPosition.y;
-
-    paintingCanvasCtx.value?.beginPath();
-    paintingCanvasCtx.value?.rect(
-      startPosition.x,
-      startPosition.y,
-      rectangleWidth,
-      rectangleHeight
-    );
-    paintingCanvasCtx.value?.stroke();
-    paintingCanvasCtx.value?.closePath();
+    drawRectangle(e, paintingCanvasCtx);
 
     isStartSet = false;
   }
