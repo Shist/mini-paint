@@ -20,7 +20,9 @@ import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import store from "@/store";
 
-export interface IUserPainting {
+export interface IPainting {
+  authorEmail: string;
+  authorName: string;
   date: Date;
   description: string;
   imgUrl: string;
@@ -98,41 +100,34 @@ async function loadUserNameByUid(userUid: string | null) {
 async function loadAllUsersPaintings() {
   const db = getFirestore();
 
-  const usersCollectionRef = collection(db, "users");
-  const usersSnapshot = await getDocs(usersCollectionRef);
+  // TODO: take not all but may be first 10 images (then more)
+  const paintingsCollectionRef = collection(db, "paintings");
+  const paintingsSnapshot = await getDocs(paintingsCollectionRef);
 
-  //const paintingsList = [];
+  const paintings: IPainting[] = [];
+  paintingsSnapshot.forEach((paintingDoc) => {
+    paintings.push(paintingDoc.data() as IPainting);
+  });
 
-  for (const userDoc of usersSnapshot.docs) {
-    const paintingsCollectionRef = collection(
-      db,
-      `users/${userDoc.id}/paintings`
-    );
-    const paintingsSnapshot = await getDocs(paintingsCollectionRef);
+  console.log(paintings);
 
-    const userPaintings: IUserPainting[] = [];
-    paintingsSnapshot.forEach((paintingDoc) => {
-      userPaintings.push(paintingDoc.data() as IUserPainting);
-    });
-
-    console.log({
-      ...userDoc.data(),
-      paintings: userPaintings,
-    });
-
-    ///tasksList.push({ id: doc.id, ...doc.data() });
-  }
-
-  //store.commit("userData/setUserTasks", tasksList);
+  // TODO: commit it to vuex
 }
 
 async function uploadUserPainting(
-  userUid: string | null,
   paintingBlob: Blob,
   paintingDescription: string
 ) {
+  const userUid = store.state.userData.userUid;
+  const userEmail = store.state.userData.userEmail;
+  const userName = store.state.userData.userName;
+
   if (userUid === null) {
     throw new Error("Can not upload user painting: 'userUid' value is null!");
+  } else if (userEmail === null) {
+    throw new Error("Can not upload user painting: 'userEmail' value is null!");
+  } else if (userName === null) {
+    throw new Error("Can not upload user painting: 'userName' value is null!");
   }
 
   const paintingRef = `paintings/${userUid}/${uuidv4()}`;
@@ -142,9 +137,11 @@ async function uploadUserPainting(
   await uploadBytes(storageRef, paintingBlob);
 
   const db = getFirestore();
-  const userPaintingsCollection = collection(db, "users", userUid, "paintings");
+  const userPaintingsCollection = collection(db, "paintings");
 
-  const paintingData: IUserPainting = {
+  const paintingData: IPainting = {
+    authorName: userName,
+    authorEmail: userEmail,
     date: new Date(),
     description: paintingDescription,
     imgUrl: paintingRef,

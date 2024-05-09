@@ -119,8 +119,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue";
-import { useStore } from "vuex";
+import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import BurgerMenu from "@/components/BurgerMenu.vue";
 import usePaint from "@/composables/usePaint";
@@ -133,7 +132,6 @@ export default defineComponent({
   name: "new-painting-page",
   components: { BurgerMenu },
   setup() {
-    const store = useStore();
     const router = useRouter();
     const isLoading = ref(false);
 
@@ -142,8 +140,6 @@ export default defineComponent({
     const { getDescriptionValidationError } = useValidationErrorMsg();
 
     const description = ref("");
-
-    const userUid = computed(() => store.state.userData.userUid);
 
     const onSubmitBtnClicked = async () => {
       const errorMsg = getDescriptionValidationError(description.value);
@@ -166,7 +162,7 @@ export default defineComponent({
           );
         }
 
-        await uploadUserPainting(userUid.value, blob, description.value);
+        await uploadUserPainting(blob, description.value);
 
         description.value = "";
 
