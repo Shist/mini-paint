@@ -17,6 +17,33 @@ export default function useEllipse(
   let startPosition = { x: 0, y: 0 };
   let isStartSet = false;
 
+  const drawEllipse = (
+    e: MouseEvent | TouchEvent,
+    ctx: Ref<CanvasRenderingContext2D | null>
+  ) => {
+    const newPosition = getPosition(e);
+
+    const radiusX = Math.abs((newPosition.x - startPosition.x) / 2);
+    const radiusY = Math.abs((newPosition.y - startPosition.y) / 2);
+
+    ctx.value?.beginPath();
+    ctx.value?.ellipse(
+      newPosition.x > startPosition.x
+        ? startPosition.x + radiusX
+        : startPosition.x - radiusX,
+      newPosition.y > startPosition.y
+        ? startPosition.y + radiusY
+        : startPosition.y - radiusY,
+      radiusX,
+      radiusY,
+      0,
+      0,
+      2 * Math.PI
+    );
+    ctx.value?.stroke();
+    ctx.value?.closePath();
+  };
+
   const ellipseStartDrawing = (e: MouseEvent | TouchEvent) => {
     startPosition = getPosition(e);
     isStartSet = true;
@@ -29,26 +56,7 @@ export default function useEllipse(
 
     clearPreviewCanvas();
 
-    const newPosition = getPosition(e);
-    const radiusX = Math.abs((newPosition.x - startPosition.x) / 2);
-    const radiusY = Math.abs((newPosition.y - startPosition.y) / 2);
-
-    previewCanvasCtx.value?.beginPath();
-    previewCanvasCtx.value?.ellipse(
-      newPosition.x > startPosition.x
-        ? startPosition.x + radiusX
-        : startPosition.x - radiusX,
-      newPosition.y > startPosition.y
-        ? startPosition.y + radiusY
-        : startPosition.y - radiusY,
-      radiusX,
-      radiusY,
-      0,
-      0,
-      2 * Math.PI
-    );
-    previewCanvasCtx.value?.stroke();
-    previewCanvasCtx.value?.closePath();
+    drawEllipse(e, previewCanvasCtx);
   };
 
   function ellipseEndDrawing(e: MouseEvent | TouchEvent) {
@@ -58,26 +66,7 @@ export default function useEllipse(
 
     clearPreviewCanvas();
 
-    const newPosition = getPosition(e);
-    const radiusX = Math.abs((newPosition.x - startPosition.x) / 2);
-    const radiusY = Math.abs((newPosition.y - startPosition.y) / 2);
-
-    paintingCanvasCtx.value?.beginPath();
-    paintingCanvasCtx.value?.ellipse(
-      newPosition.x > startPosition.x
-        ? startPosition.x + radiusX
-        : startPosition.x - radiusX,
-      newPosition.y > startPosition.y
-        ? startPosition.y + radiusY
-        : startPosition.y - radiusY,
-      radiusX,
-      radiusY,
-      0,
-      0,
-      2 * Math.PI
-    );
-    paintingCanvasCtx.value?.stroke();
-    paintingCanvasCtx.value?.closePath();
+    drawEllipse(e, paintingCanvasCtx);
 
     isStartSet = false;
   }
