@@ -15,6 +15,7 @@ import {
   getDocs,
   setDoc,
   addDoc,
+  Timestamp,
 } from "firebase/firestore/lite";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
@@ -35,6 +36,10 @@ const auth = getAuth(firebaseApp);
 
 function onFirebaseAuthStateChanged(initFoo: (user: User | null) => void) {
   onAuthStateChanged(auth, initFoo);
+}
+
+function convertFirestoreTimestampToDate(timestamp: Timestamp): Date {
+  return new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
 }
 
 async function signUpUser(email: string, name: string, password: string) {
@@ -93,10 +98,14 @@ async function loadAllUsersPaintings() {
   const paintingsCollectionRef = collection(db, "paintings");
   const paintingsSnapshot = await getDocs(paintingsCollectionRef);
 
-  const paintings: IPainting[] = [];
-  paintingsSnapshot.forEach((paintingDoc) => {
-    paintings.push(paintingDoc.data() as IPainting);
-  });
+  const paintings: IPainting[] = paintingsSnapshot.docs.map((paintingDoc) => ({
+    id: paintingDoc.id,
+    authorEmail: paintingDoc.data().authorEmail,
+    authorName: paintingDoc.data().authorName,
+    date: convertFirestoreTimestampToDate(paintingDoc.data().date),
+    description: paintingDoc.data().description,
+    imgPath: paintingDoc.data().imgPath,
+  }));
 
   store.commit.paintingsData.setPaintingsList(paintings);
 }
@@ -126,12 +135,12 @@ async function uploadUserPainting(
   const db = getFirestore();
   const userPaintingsCollection = collection(db, "paintings");
 
-  const paintingData: IPainting = {
+  const paintingData: Omit<IPainting, "id"> = {
     authorName: userName,
     authorEmail: userEmail,
     date: new Date(),
     description: paintingDescription,
-    imgUrl: paintingRef,
+    imgPath: paintingRef,
   };
 
   await addDoc(userPaintingsCollection, paintingData);
@@ -139,6 +148,7 @@ async function uploadUserPainting(
 
 export {
   onFirebaseAuthStateChanged,
+  convertFirestoreTimestampToDate,
   signUpUser,
   signInUser,
   signOutUser,

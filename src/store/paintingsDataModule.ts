@@ -1,11 +1,12 @@
 import { defineModule } from "direct-vuex";
 
 export interface IPainting {
+  id: string;
   authorEmail: string;
   authorName: string;
   date: Date;
   description: string;
-  imgUrl: string;
+  imgPath: string;
 }
 
 export interface IPaintingsDataState {

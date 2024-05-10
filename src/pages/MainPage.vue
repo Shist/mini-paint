@@ -1,6 +1,18 @@
 <template>
   <div class="main-page">
     <burger-menu />
+    <h2 class="main-page__headline">Community paintings</h2>
+    <div class="main-page__paintings-wrapper">
+      <painting-card
+        v-for="painting in paintingsList"
+        :date="painting.date"
+        :authorName="painting.authorName"
+        :authorEmail="painting.authorEmail"
+        :description="painting.description"
+        :imgPath="painting.imgPath"
+        :key="painting.id"
+      />
+    </div>
   </div>
 </template>
 
@@ -8,13 +20,14 @@
 import { defineComponent, computed, onMounted, ComputedRef } from "vue";
 import { useStore } from "vuex";
 import BurgerMenu from "@/components/BurgerMenu.vue";
+import PaintingCard from "@/components/PaintingCard.vue";
 import useToast from "@/composables/useToast";
 import { loadAllUsersPaintings } from "@/services/firebase";
 import { IPainting } from "@/store/paintingsDataModule";
 
 export default defineComponent({
   name: "main-page",
-  components: { BurgerMenu },
+  components: { BurgerMenu, PaintingCard },
   setup() {
     const store = useStore();
 
@@ -42,6 +55,8 @@ export default defineComponent({
         }
       }
     });
+
+    return { paintingsList };
   },
 });
 </script>
@@ -54,6 +69,19 @@ export default defineComponent({
   @extend %default-wrapper;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  &__headline {
+    @include default-headline(42px, 42px, var(--color-text));
+    margin-bottom: 10px;
+    max-width: calc(100% - 50px);
+    @media (max-width: $tablet-s) {
+      font-size: 32px;
+      line-height: 32px;
+    }
+  }
+  &__paintings-wrapper {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+  }
 }
 </style>
