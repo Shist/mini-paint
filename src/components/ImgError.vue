@@ -5,9 +5,9 @@
       alt="Error while loading image"
       class="img-error__icon"
     />
-    <span class="img-error__message"
-      >An error occurred while loading the image.</span
-    >
+    <span class="img-error__message">
+      An error occurred while loading the image.
+    </span>
   </div>
 </template>
 

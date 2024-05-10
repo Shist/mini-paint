@@ -36,6 +36,9 @@
         :imgPath="painting.imgPath"
         :key="painting.id"
       />
+      <no-images-found
+        v-show="!arePaintingsLoading && !paintingsList?.length"
+      />
     </div>
   </div>
 </template>
@@ -45,17 +48,19 @@ import { defineComponent, ref, computed, onMounted, ComputedRef } from "vue";
 import { useStore } from "vuex";
 import BurgerMenu from "@/components/BurgerMenu.vue";
 import PaintingCard from "@/components/PaintingCard.vue";
+import NoImagesFound from "@/components/NoImagesFound.vue";
 import useToast from "@/composables/useToast";
 import { loadAllUsersPaintings } from "@/services/firebase";
 import { IPainting } from "@/store/paintingsDataModule";
 
 export default defineComponent({
   name: "main-page",
-  components: { BurgerMenu, PaintingCard },
+  components: { BurgerMenu, PaintingCard, NoImagesFound },
   setup() {
     const store = useStore();
     const authorNameSearchStr = ref("");
     const isFilterVisible = ref(false);
+    const arePaintingsLoading = ref(true);
 
     const { setLoadingToast, removeCurrToast, setErrorToast } = useToast();
 
@@ -64,6 +69,7 @@ export default defineComponent({
     );
 
     const handlePaintingsLoading = async () => {
+      arePaintingsLoading.value = true;
       setLoadingToast("Loading paintings...");
       try {
         await loadAllUsersPaintings(authorNameSearchStr.value);
@@ -76,6 +82,8 @@ export default defineComponent({
             `An error occurred while trying to load paintings! ${error.message}`
           );
         }
+      } finally {
+        arePaintingsLoading.value = false;
       }
     };
 
@@ -87,6 +95,7 @@ export default defineComponent({
       authorNameSearchStr,
       paintingsList,
       isFilterVisible,
+      arePaintingsLoading,
       handlePaintingsLoading,
     };
   },
