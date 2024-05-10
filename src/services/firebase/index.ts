@@ -15,6 +15,8 @@ import {
   getDocs,
   setDoc,
   addDoc,
+  query,
+  orderBy,
   Timestamp,
 } from "firebase/firestore/lite";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
@@ -95,7 +97,10 @@ async function loadAllUsersPaintings() {
   const db = getFirestore();
 
   // TODO: take not all but may be first 10 images (then more)
-  const paintingsCollectionRef = collection(db, "paintings");
+  const paintingsCollectionRef = query(
+    collection(db, "paintings"),
+    orderBy("date", "desc")
+  );
   const paintingsSnapshot = await getDocs(paintingsCollectionRef);
 
   const paintings: IPainting[] = paintingsSnapshot.docs.map((paintingDoc) => ({
