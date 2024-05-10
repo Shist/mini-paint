@@ -77,6 +77,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
+import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import BurgerMenu from "@/components/BurgerMenu.vue";
 import useToast from "@/composables/useToast";
@@ -88,6 +89,7 @@ export default defineComponent({
   name: "sign-up-page",
   components: { BurgerMenu },
   setup() {
+    const store = useStore();
     const router = useRouter();
     const isLoading = ref(false);
 
@@ -115,6 +117,7 @@ export default defineComponent({
       isLoading.value = true;
       setLoadingToast("Registering an account...");
       try {
+        store.commit("userData/setUserName", name.value);
         await signUpUser(email.value, name.value, password.value);
         setSuccessToast("Your account has been successfully registered!");
         email.value = "";
@@ -123,6 +126,7 @@ export default defineComponent({
         repeatPassword.value = "";
         router.push("/");
       } catch (error: unknown) {
+        store.commit("userData/setUserName", null);
         if (error instanceof Error) {
           const errorMsg = getErrorMsg(error);
           setErrorToast(

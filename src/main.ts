@@ -36,8 +36,10 @@ onFirebaseAuthStateChanged((user: User | null) => {
   store.original.commit("userData/setUserUid", user ? user.uid : null);
   store.original.commit("userData/setUserEmail", user ? user.email : null);
 
-  store.original.commit("userData/setUserName", "(the name is loading...)");
-  loadUserNameByUid(user ? user.uid : null).catch(() => {
-    store.original.commit("userData/setUserName", "(error while loading)");
-  });
+  if (!store.original.state.userData.userName && user) {
+    store.original.commit("userData/setUserName", "(the name is loading...)");
+    loadUserNameByUid(user.uid).catch(() =>
+      store.original.commit("userData/setUserName", "(error while loading)")
+    );
+  }
 });

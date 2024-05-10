@@ -81,11 +81,7 @@ async function signOutUser() {
   store.commit.userData.setUserName(null);
 }
 
-async function loadUserNameByUid(userUid: string | null) {
-  if (userUid === null) {
-    throw new Error("Can not load user name: 'userUid' value is null!");
-  }
-
+async function loadUserNameByUid(userUid: string) {
   const db = getFirestore();
 
   const userDataDoc = doc(db, "users", userUid);
