@@ -257,7 +257,6 @@ export default defineComponent({
       row-gap: 20px;
       .burger-menu__nav-list-item {
         width: 80%;
-        padding: 20px;
         text-align: center;
         border: 3px solid var(--color-burger-menu-link-borders);
         border-radius: 10px;
@@ -275,6 +274,9 @@ export default defineComponent({
         }
         .burger-menu__link {
           @include default-text(36px, 36px, var(--color-burger-menu-text));
+          display: inline-block;
+          width: 100%;
+          padding: 20px;
           text-decoration: none;
           transition: 0.3s;
           @media (max-width: $laptop-s) {
