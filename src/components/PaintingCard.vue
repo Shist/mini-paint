@@ -10,12 +10,14 @@
       :alt="`The painting of ${authorLabel}`"
       class="painting-card__img"
     />
+    <img-skeleton />
     <img-error />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, computed } from "vue";
+import ImgSkeleton from "@/components/ImgSkeleton.vue";
 import ImgError from "@/components/ImgError.vue";
 import {
   getStorage,
@@ -26,7 +28,7 @@ import {
 export default defineComponent({
   name: "painting-card",
 
-  components: { ImgError },
+  components: { ImgSkeleton, ImgError },
 
   props: {
     date: {
