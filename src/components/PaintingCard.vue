@@ -5,23 +5,26 @@
     <span class="painting-card__description"
       >Description: {{ description }}</span
     >
+    <img-skeleton v-if="currImgState === 'loading'" />
     <img
+      v-show="currImgState === 'loaded'"
       :src="imgSrc"
       :alt="`The painting of ${authorLabel}`"
       class="painting-card__img"
+      @load="handleImageSrcLoad"
+      @error="handleImageSrcError"
     />
-    <img-skeleton />
-    <img-error />
+    <img-error v-if="currImgState === 'error'" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, computed } from "vue";
+import { defineComponent, ref, Ref, onMounted, computed } from "vue";
 import ImgSkeleton from "@/components/ImgSkeleton.vue";
 import ImgError from "@/components/ImgError.vue";
 import {
   getStorage,
-  ref as firbaseRef,
+  ref as firebaseRef,
   getDownloadURL,
 } from "firebase/storage";
 
@@ -54,7 +57,8 @@ export default defineComponent({
   },
 
   setup(props) {
-    const imgSrc = ref("");
+    const currImgState = ref("loading");
+    const imgSrc: Ref<string | undefined> = ref(undefined);
 
     const authorLabel = computed(() => {
       return `${props.authorName} (${props.authorEmail})`;
@@ -63,10 +67,30 @@ export default defineComponent({
     onMounted(async () => {
       const storage = getStorage();
 
-      imgSrc.value = await getDownloadURL(firbaseRef(storage, props.imgPath));
+      try {
+        imgSrc.value = await getDownloadURL(
+          firebaseRef(storage, props.imgPath)
+        );
+      } catch (error: unknown) {
+        currImgState.value = "error";
+      }
     });
 
-    return { imgSrc, authorLabel };
+    const handleImageSrcLoad = () => {
+      currImgState.value = "loaded";
+    };
+
+    const handleImageSrcError = () => {
+      currImgState.value = "error";
+    };
+
+    return {
+      currImgState,
+      imgSrc,
+      authorLabel,
+      handleImageSrcLoad,
+      handleImageSrcError,
+    };
   },
 });
 </script>

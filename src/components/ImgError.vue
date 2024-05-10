@@ -36,6 +36,7 @@ export default defineComponent({
   }
   &__message {
     @include default-text(20px, 20px, var(--color-error));
+    text-align: center;
     @media (max-width: $tablet-l) {
       font-size: 16px;
       line-height: 16px;
