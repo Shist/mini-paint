@@ -10,20 +10,23 @@
       :alt="`The painting of ${authorLabel}`"
       class="painting-card__img"
     />
+    <img-error />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, computed } from "vue";
+import ImgError from "@/components/ImgError.vue";
 import {
   getStorage,
   ref as firbaseRef,
   getDownloadURL,
-  getBlob,
 } from "firebase/storage";
 
 export default defineComponent({
   name: "painting-card",
+
+  components: { ImgError },
 
   props: {
     date: {
