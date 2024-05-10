@@ -16,7 +16,9 @@
       />
     </div>
     <div class="main-page__btns-wrapper">
-      <button class="main-page__refresh-btn">Refresh</button>
+      <button class="main-page__refresh-btn" @click="handlePaintingsLoading">
+        Refresh
+      </button>
       <button
         class="main-page__show-filters-btn"
         @click="isFilterVisible = !isFilterVisible"
@@ -61,26 +63,32 @@ export default defineComponent({
       () => store.state.paintingsData.paintingsList
     );
 
-    onMounted(async () => {
-      if (paintingsList.value) {
-        return;
-      }
-
+    const handlePaintingsLoading = async () => {
       setLoadingToast("Loading paintings...");
       try {
-        await loadAllUsersPaintings();
+        await loadAllUsersPaintings(authorNameSearchStr.value);
 
         removeCurrToast();
       } catch (error: unknown) {
         if (error instanceof Error) {
+          console.error(error.message);
           setErrorToast(
             `An error occurred while trying to load paintings! ${error.message}`
           );
         }
       }
+    };
+
+    onMounted(() => {
+      handlePaintingsLoading();
     });
 
-    return { authorNameSearchStr, paintingsList, isFilterVisible };
+    return {
+      authorNameSearchStr,
+      paintingsList,
+      isFilterVisible,
+      handlePaintingsLoading,
+    };
   },
 });
 </script>

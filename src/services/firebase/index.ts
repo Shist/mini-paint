@@ -16,6 +16,7 @@ import {
   setDoc,
   addDoc,
   query,
+  where,
   orderBy,
   Timestamp,
 } from "firebase/firestore/lite";
@@ -93,14 +94,17 @@ async function loadUserNameByUid(userUid: string) {
   store.commit.userData.setUserName(docData ? docData.name : "(empty)");
 }
 
-async function loadAllUsersPaintings() {
+async function loadAllUsersPaintings(filterAuthorName?: string) {
   const db = getFirestore();
 
   // TODO: take not all but may be first 10 images (then more)
-  const paintingsCollectionRef = query(
-    collection(db, "paintings"),
-    orderBy("date", "desc")
-  );
+  const paintingsCollectionRef = filterAuthorName
+    ? query(
+        collection(db, "paintings"),
+        where("authorName", "==", filterAuthorName),
+        orderBy("date", "desc")
+      )
+    : query(collection(db, "paintings"), orderBy("date", "desc"));
   const paintingsSnapshot = await getDocs(paintingsCollectionRef);
 
   const paintings: IPainting[] = paintingsSnapshot.docs.map((paintingDoc) => ({

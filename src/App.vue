@@ -31,5 +31,6 @@ export default defineComponent({
   cursor: text;
   font-family: $font-roboto;
   text-align: center;
+  word-break: break-word;
 }
 </style>
