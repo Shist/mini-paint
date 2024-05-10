@@ -5,22 +5,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import { defineComponent, computed, onMounted, ComputedRef } from "vue";
+import { useStore } from "vuex";
 import BurgerMenu from "@/components/BurgerMenu.vue";
 import useToast from "@/composables/useToast";
 import { loadAllUsersPaintings } from "@/services/firebase";
+import { IPainting } from "@/store/paintingsDataModule";
 
 export default defineComponent({
   name: "main-page",
   components: { BurgerMenu },
   setup() {
+    const store = useStore();
+
     const { setLoadingToast, removeCurrToast, setErrorToast } = useToast();
 
+    const paintingsList: ComputedRef<IPainting[] | null> = computed(
+      () => store.state.paintingsData.paintingsList
+    );
+
     onMounted(async () => {
-      // TODO
-      // if (this.paintings) {
-      //   return;
-      // }
+      if (paintingsList.value) {
+        return;
+      }
 
       setLoadingToast("Loading paintings...");
       try {

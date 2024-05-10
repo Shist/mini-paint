@@ -19,14 +19,7 @@ import {
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import store from "@/store";
-
-export interface IPainting {
-  authorEmail: string;
-  authorName: string;
-  date: Date;
-  description: string;
-  imgUrl: string;
-}
+import { IPainting } from "@/store/paintingsDataModule";
 
 const firebaseApp = initializeApp({
   apiKey: process.env.VUE_APP_API_KEY,
@@ -105,9 +98,7 @@ async function loadAllUsersPaintings() {
     paintings.push(paintingDoc.data() as IPainting);
   });
 
-  console.log(paintings);
-
-  // TODO: commit it to vuex
+  store.commit.paintingsData.setPaintingsList(paintings);
 }
 
 async function uploadUserPainting(
