@@ -2,6 +2,28 @@
   <div class="main-page">
     <burger-menu />
     <h2 class="main-page__headline">Community paintings</h2>
+    <div v-show="isFilterVisible" class="main-page__filters-wrapper">
+      <label class="main-page__author-name-input-label" for="authorNameInput">
+        Only paintings of the author with name:
+      </label>
+      <input
+        v-model="authorNameSearchStr"
+        type="text"
+        name="authorName"
+        class="main-page__author-name-input"
+        id="authorNameInput"
+        placeholder="Name of the author"
+      />
+    </div>
+    <div class="main-page__btns-wrapper">
+      <button class="main-page__refresh-btn">Refresh</button>
+      <button
+        class="main-page__show-filters-btn"
+        @click="isFilterVisible = !isFilterVisible"
+      >
+        {{ isFilterVisible ? "Hide filter" : "Show filter" }}
+      </button>
+    </div>
     <div class="main-page__paintings-wrapper">
       <painting-card
         v-for="painting in paintingsList"
@@ -17,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted, ComputedRef } from "vue";
+import { defineComponent, ref, computed, onMounted, ComputedRef } from "vue";
 import { useStore } from "vuex";
 import BurgerMenu from "@/components/BurgerMenu.vue";
 import PaintingCard from "@/components/PaintingCard.vue";
@@ -30,6 +52,8 @@ export default defineComponent({
   components: { BurgerMenu, PaintingCard },
   setup() {
     const store = useStore();
+    const authorNameSearchStr = ref("");
+    const isFilterVisible = ref(false);
 
     const { setLoadingToast, removeCurrToast, setErrorToast } = useToast();
 
@@ -56,7 +80,7 @@ export default defineComponent({
       }
     });
 
-    return { paintingsList };
+    return { authorNameSearchStr, paintingsList, isFilterVisible };
   },
 });
 </script>
@@ -76,6 +100,45 @@ export default defineComponent({
     @media (max-width: $tablet-s) {
       font-size: 32px;
       line-height: 32px;
+    }
+  }
+  &__filters-wrapper {
+    margin-bottom: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    .main-page__author-name-input-label {
+      @include default-text(26px, 26px, var(--color-text));
+      @media (max-width: $phone-l) {
+        font-size: 20px;
+        line-height: 20px;
+      }
+    }
+    .main-page__author-name-input {
+      @extend %default-input;
+    }
+  }
+  .main-page__btns-wrapper {
+    margin-bottom: 20px;
+    padding: 10px;
+    display: flex;
+    column-gap: 10px;
+    @media (max-width: $phone-m) {
+      padding: 5px;
+      column-gap: 5px;
+    }
+    .main-page__refresh-btn {
+      @include default-btn(110px, var(--color-btn-text), var(--color-btn-bg));
+      text-decoration: none;
+    }
+    .main-page__show-filters-btn {
+      @include default-btn(
+        110px,
+        var(--color-btn-text),
+        var(--color-filter-btn-bg)
+      );
+      text-decoration: none;
     }
   }
   &__paintings-wrapper {
