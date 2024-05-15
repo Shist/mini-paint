@@ -58,7 +58,9 @@ import { signInUser } from "@/services/firebase";
 
 export default defineComponent({
   name: "sign-in-page",
+
   components: { BurgerMenu },
+
   setup() {
     const router = useRouter();
     const isLoading = ref(false);
@@ -74,9 +76,12 @@ export default defineComponent({
       setLoadingToast("Logging...");
       try {
         await signInUser(email.value, password.value);
+
         setSuccessToast("You have successfully logged in!");
+
         email.value = "";
         password.value = "";
+
         router.push("/");
       } catch (error: unknown) {
         if (error instanceof Error) {

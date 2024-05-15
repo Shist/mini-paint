@@ -27,6 +27,7 @@ import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import store from "@/store";
 import { IPainting } from "@/store/paintingsDataModule";
+import { FIREBASE_LIMIT_PER_QUERY } from "@/constants";
 
 const firebaseApp = initializeApp({
   apiKey: process.env.VUE_APP_API_KEY,
@@ -109,13 +110,13 @@ async function loadAllUsersPaintings(filterAuthorName?: string) {
           where("authorName", "==", filterAuthorName),
           orderBy("date", "desc"),
           startAfter(store.state.paintingsData.lastPaintingDoc),
-          limit(10)
+          limit(FIREBASE_LIMIT_PER_QUERY)
         )
       : query(
           collection(db, "paintings"),
           orderBy("date", "desc"),
           startAfter(store.state.paintingsData.lastPaintingDoc),
-          limit(10)
+          limit(FIREBASE_LIMIT_PER_QUERY)
         );
   } else {
     paintingsCollectionRef = filterAuthorName
@@ -123,9 +124,13 @@ async function loadAllUsersPaintings(filterAuthorName?: string) {
           collection(db, "paintings"),
           where("authorName", "==", filterAuthorName),
           orderBy("date", "desc"),
-          limit(10)
+          limit(FIREBASE_LIMIT_PER_QUERY)
         )
-      : query(collection(db, "paintings"), orderBy("date", "desc"), limit(10));
+      : query(
+          collection(db, "paintings"),
+          orderBy("date", "desc"),
+          limit(FIREBASE_LIMIT_PER_QUERY)
+        );
   }
 
   const paintingsSnapshot = await getDocs(paintingsCollectionRef);

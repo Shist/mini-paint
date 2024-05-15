@@ -6,3 +6,4 @@ export const PAINT_TOOL_BTN_TYPES = {
   STAR: "toolBtnStar",
   POLYGON: "toolBtnPolygon",
 };
+export const FIREBASE_LIMIT_PER_QUERY = 10;

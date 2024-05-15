@@ -27,6 +27,7 @@ import { IThemeState } from "@/store/themeModule";
 
 export default defineComponent({
   name: "theme-switch",
+
   setup() {
     const store = useStore();
 

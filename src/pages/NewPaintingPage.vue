@@ -134,16 +134,18 @@ import { PAINT_TOOL_BTN_TYPES } from "@/constants";
 
 export default defineComponent({
   name: "new-painting-page",
+
   components: { BurgerMenu },
+
   setup() {
     const router = useRouter();
+
     const isLoading = ref(false);
+    const description = ref("");
 
     const paintObj = usePaint();
     const { setLoadingToast, setSuccessToast, setErrorToast } = useToast();
     const { getDescriptionValidationError } = useValidationErrorMsg();
-
-    const description = ref("");
 
     const onSubmitBtnClicked = async () => {
       const errorMsg = getDescriptionValidationError(description.value);

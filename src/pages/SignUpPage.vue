@@ -91,11 +91,11 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const router = useRouter();
-    const isLoading = ref(false);
 
     const { setLoadingToast, setSuccessToast, setErrorToast } = useToast();
     const { getErrorMsg } = useFirebaseErrorMsg();
 
+    const isLoading = ref(false);
     const email = ref("");
     const name = ref("");
     const password = ref("");
@@ -110,23 +110,30 @@ export default defineComponent({
         password,
         repeatPassword,
       });
+
       if (errorMsg) {
         setErrorToast(`Error! ${errorMsg}`);
         return;
       }
+
       isLoading.value = true;
       setLoadingToast("Registering an account...");
       try {
         store.commit("userData/setUserName", name.value);
+
         await signUpUser(email.value, name.value, password.value);
+
         setSuccessToast("Your account has been successfully registered!");
+
         email.value = "";
         name.value = "";
         password.value = "";
         repeatPassword.value = "";
+
         router.push("/");
       } catch (error: unknown) {
         store.commit("userData/setUserName", null);
+
         if (error instanceof Error) {
           const errorMsg = getErrorMsg(error);
           setErrorToast(

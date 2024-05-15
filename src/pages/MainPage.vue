@@ -59,9 +59,12 @@ import { IPainting } from "@/store/paintingsDataModule";
 
 export default defineComponent({
   name: "main-page",
+
   components: { BurgerMenu, PaintingCard, NoImagesFound },
+
   setup() {
     const store = useStore();
+
     const authorNameSearchStr = ref("");
     const isFilterVisible = ref(false);
     const arePaintingsLoading = ref(true);
@@ -74,7 +77,6 @@ export default defineComponent({
 
     const loadMorePaintings = () => {
       if (!arePaintingsLoading.value) {
-        console.log("!!!");
         loadAllUsersPaintings(authorNameSearchStr.value);
       }
     };
@@ -91,7 +93,6 @@ export default defineComponent({
         removeCurrToast();
       } catch (error: unknown) {
         if (error instanceof Error) {
-          console.error(error.message);
           setErrorToast(
             `An error occurred while trying to load paintings! ${error.message}`
           );

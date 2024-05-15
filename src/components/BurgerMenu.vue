@@ -79,6 +79,7 @@ import { signOutUser } from "@/services/firebase";
 
 export default defineComponent({
   name: "burger-menu",
+
   setup() {
     const store = useStore();
     const router = useRouter();
@@ -104,7 +105,9 @@ export default defineComponent({
     const onLogOutBtnClicked = async () => {
       try {
         await signOutUser();
+
         menuIsOpened.value = false;
+
         router.push("/sign-in");
       } catch (error: unknown) {
         if (error instanceof Error) {
