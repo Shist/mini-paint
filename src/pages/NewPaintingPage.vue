@@ -23,6 +23,10 @@
       ></canvas>
       <div class="new-painting-page__tools-wrapper">
         <div class="new-painting-page__brush-color-wrapper">
+          <button
+            class="new-painting-page__clean-btn"
+            @click="cleanCanvas"
+          ></button>
           <input
             v-model="brushColor"
             type="color"
@@ -240,16 +244,38 @@ export default defineComponent({
       justify-content: center;
       align-items: center;
       gap: 20px;
-      @media (max-width: $tablet-s) {
+      @media (max-width: $tablet-m) {
         flex-direction: column;
       }
       .new-painting-page__brush-color-wrapper {
         display: flex;
         align-items: center;
         column-gap: 10px;
+        @media (max-width: $phone-m) {
+          column-gap: 8px;
+        }
+        .new-painting-page__clean-btn {
+          width: 45px;
+          height: 45px;
+          background: transparent var(--canvas-clean-btn-img) no-repeat center /
+            cover;
+          cursor: pointer;
+          transition: 0.3s;
+          &:hover {
+            transform: scale(1.05);
+            box-shadow: 2px 4px 4px 0 rgba(var(--canvas-btn-shadow-rgb), 0.3);
+          }
+          @media (max-width: $tablet-s) {
+            height: 40px;
+            width: 40px;
+          }
+        }
         .new-painting-page__brush-color-input {
           width: 70px;
           height: 40px;
+          @media (max-width: $phone-m) {
+            width: 50px;
+          }
         }
         .new-painting-page__brush-width-input {
           width: 100px;

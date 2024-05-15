@@ -171,6 +171,17 @@ export default function usePaint() {
     }
   });
 
+  const cleanCanvas = (e: MouseEvent) => {
+    polygonEndDrawing(e);
+
+    paintingCanvasCtx.value?.clearRect(
+      0,
+      0,
+      paintingCanvas.value ? paintingCanvas.value?.width : 0,
+      paintingCanvas.value ? paintingCanvas.value?.height : 0
+    );
+  };
+
   const onClickDown = (e: MouseEvent | TouchEvent) => {
     switch (activeToolBtn.value) {
       case PAINT_TOOL_BTN_TYPES.BRUSH:
@@ -258,6 +269,7 @@ export default function usePaint() {
     brushColor,
     brushWidth,
     activeToolBtn,
+    cleanCanvas,
     onClickDown,
     onMove,
     onClickUp,
