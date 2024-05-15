@@ -81,7 +81,9 @@ export default defineComponent({
     };
 
     const handleImageSrcError = () => {
-      currImgState.value = "error";
+      if (imgSrc.value) {
+        currImgState.value = "error";
+      }
     };
 
     return {
