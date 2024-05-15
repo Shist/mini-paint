@@ -49,6 +49,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted, ComputedRef } from "vue";
+import { onBeforeRouteLeave } from "vue-router";
 import { useStore } from "vuex";
 import BurgerMenu from "@/components/BurgerMenu.vue";
 import PaintingCard from "@/components/PaintingCard.vue";
@@ -75,6 +76,15 @@ export default defineComponent({
       () => store.state.paintingsData.paintingsList
     );
 
+    const cleanPaintingsData = () => {
+      store.commit("paintingsData/setPaintingsList", null);
+      store.commit("paintingsData/setLastPaintingDoc", null);
+    };
+
+    onBeforeRouteLeave(() => {
+      cleanPaintingsData();
+    });
+
     const handlePaintingsLoading = async () => {
       arePaintingsLoading.value = true;
       setLoadingToast("Loading paintings...");
@@ -94,8 +104,7 @@ export default defineComponent({
     };
 
     const loadFirstPaintings = async () => {
-      store.commit("paintingsData/setPaintingsList", null);
-      store.commit("paintingsData/setLastPaintingDoc", null);
+      cleanPaintingsData();
 
       handlePaintingsLoading();
     };
