@@ -110,7 +110,7 @@ export default defineComponent({
     };
 
     const loadMorePaintings = async () => {
-      if (!arePaintingsLoading.value) {
+      if (!arePaintingsLoading.value && paintingsList.value?.length) {
         handlePaintingsLoading();
       }
     };
