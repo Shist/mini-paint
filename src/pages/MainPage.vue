@@ -39,6 +39,10 @@
       <no-images-found
         v-show="!arePaintingsLoading && !paintingsList?.length"
       />
+      <div
+        v-intersection="loadMorePaintings"
+        class="main-page__bottom-scroll-indicator"
+      ></div>
     </div>
   </div>
 </template>
@@ -68,7 +72,17 @@ export default defineComponent({
       () => store.state.paintingsData.paintingsList
     );
 
+    const loadMorePaintings = () => {
+      if (!arePaintingsLoading.value) {
+        console.log("!!!");
+        loadAllUsersPaintings(authorNameSearchStr.value);
+      }
+    };
+
     const handlePaintingsLoading = async () => {
+      store.commit("paintingsData/setPaintingsList", null);
+      store.commit("paintingsData/setLastPaintingDoc", null);
+
       arePaintingsLoading.value = true;
       setLoadingToast("Loading paintings...");
       try {
@@ -96,6 +110,7 @@ export default defineComponent({
       paintingsList,
       isFilterVisible,
       arePaintingsLoading,
+      loadMorePaintings,
       handlePaintingsLoading,
     };
   },

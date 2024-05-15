@@ -1,4 +1,5 @@
 import { defineModule } from "direct-vuex";
+import { QueryDocumentSnapshot } from "firebase/firestore/lite";
 
 export interface IPainting {
   id: string;
@@ -11,11 +12,13 @@ export interface IPainting {
 
 export interface IPaintingsDataState {
   paintingsList: IPainting[] | null;
+  lastPaintingDoc: QueryDocumentSnapshot | null;
 }
 
 const paintingsDataModule = defineModule({
   state: (): IPaintingsDataState => ({
     paintingsList: null,
+    lastPaintingDoc: null,
   }),
 
   getters: {},
@@ -23,6 +26,9 @@ const paintingsDataModule = defineModule({
   mutations: {
     setPaintingsList(state, paintingsList: IPainting[] | null) {
       state.paintingsList = paintingsList;
+    },
+    setLastPaintingDoc(state, lastPaintingDoc: QueryDocumentSnapshot | null) {
+      state.lastPaintingDoc = lastPaintingDoc;
     },
   },
 

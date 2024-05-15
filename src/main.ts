@@ -3,6 +3,7 @@ import App from "@/App.vue";
 import components from "@/components/UI";
 import router from "@/router";
 import store from "@/store";
+import directives from "@/directives";
 import { User } from "firebase/auth";
 import {
   onFirebaseAuthStateChanged,
@@ -21,6 +22,10 @@ onFirebaseAuthStateChanged((user: User | null) => {
       if (component.name) {
         app?.component(component.name, component);
       }
+    });
+
+    directives.forEach((directive) => {
+      app?.directive(directive.name, directive);
     });
 
     app

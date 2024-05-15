@@ -18,6 +18,9 @@ import {
   query,
   where,
   orderBy,
+  startAfter,
+  limit,
+  Query,
   Timestamp,
 } from "firebase/firestore/lite";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
@@ -97,15 +100,42 @@ async function loadUserNameByUid(userUid: string) {
 async function loadAllUsersPaintings(filterAuthorName?: string) {
   const db = getFirestore();
 
-  // TODO: take not all but may be first 10 images (then more)
-  const paintingsCollectionRef = filterAuthorName
-    ? query(
-        collection(db, "paintings"),
-        where("authorName", "==", filterAuthorName),
-        orderBy("date", "desc")
-      )
-    : query(collection(db, "paintings"), orderBy("date", "desc"));
+  let paintingsCollectionRef = null as Query | null;
+
+  if (store.state.paintingsData.lastPaintingDoc) {
+    paintingsCollectionRef = filterAuthorName
+      ? query(
+          collection(db, "paintings"),
+          where("authorName", "==", filterAuthorName),
+          orderBy("date", "desc"),
+          startAfter(store.state.paintingsData.lastPaintingDoc),
+          limit(10)
+        )
+      : query(
+          collection(db, "paintings"),
+          orderBy("date", "desc"),
+          startAfter(store.state.paintingsData.lastPaintingDoc),
+          limit(10)
+        );
+  } else {
+    paintingsCollectionRef = filterAuthorName
+      ? query(
+          collection(db, "paintings"),
+          where("authorName", "==", filterAuthorName),
+          orderBy("date", "desc"),
+          limit(10)
+        )
+      : query(collection(db, "paintings"), orderBy("date", "desc"), limit(10));
+  }
+
   const paintingsSnapshot = await getDocs(paintingsCollectionRef);
+
+  if (!paintingsSnapshot.docs.length) {
+    return;
+  }
+
+  const lastVisible = paintingsSnapshot.docs[paintingsSnapshot.docs.length - 1];
+  store.commit.paintingsData.setLastPaintingDoc(lastVisible);
 
   const paintings: IPainting[] = paintingsSnapshot.docs.map((paintingDoc) => ({
     id: paintingDoc.id,
@@ -116,7 +146,8 @@ async function loadAllUsersPaintings(filterAuthorName?: string) {
     imgPath: paintingDoc.data().imgPath,
   }));
 
-  store.commit.paintingsData.setPaintingsList(paintings);
+  const currList = store.state.paintingsData.paintingsList || [];
+  store.commit.paintingsData.setPaintingsList([...currList, ...paintings]);
 }
 
 async function uploadUserPainting(
