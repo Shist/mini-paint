@@ -16,7 +16,7 @@
       />
     </div>
     <div class="main-page__btns-wrapper">
-      <button class="main-page__refresh-btn" @click="handlePaintingsLoading">
+      <button class="main-page__refresh-btn" @click="loadFirstPaintings">
         Refresh
       </button>
       <button
@@ -75,16 +75,7 @@ export default defineComponent({
       () => store.state.paintingsData.paintingsList
     );
 
-    const loadMorePaintings = () => {
-      if (!arePaintingsLoading.value) {
-        loadAllUsersPaintings(authorNameSearchStr.value);
-      }
-    };
-
     const handlePaintingsLoading = async () => {
-      store.commit("paintingsData/setPaintingsList", null);
-      store.commit("paintingsData/setLastPaintingDoc", null);
-
       arePaintingsLoading.value = true;
       setLoadingToast("Loading paintings...");
       try {
@@ -102,6 +93,19 @@ export default defineComponent({
       }
     };
 
+    const loadFirstPaintings = async () => {
+      store.commit("paintingsData/setPaintingsList", null);
+      store.commit("paintingsData/setLastPaintingDoc", null);
+
+      handlePaintingsLoading();
+    };
+
+    const loadMorePaintings = async () => {
+      if (!arePaintingsLoading.value) {
+        handlePaintingsLoading();
+      }
+    };
+
     onMounted(() => {
       handlePaintingsLoading();
     });
@@ -112,7 +116,7 @@ export default defineComponent({
       isFilterVisible,
       arePaintingsLoading,
       loadMorePaintings,
-      handlePaintingsLoading,
+      loadFirstPaintings,
     };
   },
 });
