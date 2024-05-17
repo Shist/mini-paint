@@ -17,6 +17,7 @@ export default function useRectangle() {
       rectangleHeight
     );
     ctx.value?.stroke();
+    ctx.value?.fill();
     ctx.value?.closePath();
   };
 

@@ -20,6 +20,7 @@ export default function useEllipse() {
       2 * Math.PI
     );
     ctx.value?.stroke();
+    ctx.value?.fill();
     ctx.value?.closePath();
   };
 

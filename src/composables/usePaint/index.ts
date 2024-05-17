@@ -14,8 +14,9 @@ export default function usePaint() {
   const previewCanvas = ref(null) as Ref<HTMLCanvasElement | null>;
   const previewCanvasCtx = ref(null) as Ref<CanvasRenderingContext2D | null>;
 
-  const brushColor = ref("#000000");
   const brushWidth = ref("5");
+  const brushColor = ref("#000000");
+  const fillColor = ref("#000000");
   const activeToolBtn = ref(PAINT_TOOL_BTN_TYPES.BRUSH);
 
   const {
@@ -133,8 +134,9 @@ export default function usePaint() {
     }
 
     canvasCtx.value.lineCap = "round";
-    canvasCtx.value.strokeStyle = brushColor.value;
     canvasCtx.value.lineWidth = Number(brushWidth.value);
+    canvasCtx.value.strokeStyle = brushColor.value;
+    canvasCtx.value.fillStyle = fillColor.value;
   };
 
   onMounted(() => {
@@ -149,6 +151,14 @@ export default function usePaint() {
     window.removeEventListener("mouseup", handleMouseUpOutsideCanvas);
   });
 
+  watch(brushWidth, () => {
+    if (paintingCanvasCtx.value && previewCanvasCtx.value) {
+      paintingCanvasCtx.value.lineWidth = Number(brushWidth.value);
+
+      previewCanvasCtx.value.lineWidth = Number(brushWidth.value);
+    }
+  });
+
   watch(brushColor, () => {
     if (paintingCanvasCtx.value && previewCanvasCtx.value) {
       paintingCanvasCtx.value.strokeStyle = brushColor.value;
@@ -157,11 +167,11 @@ export default function usePaint() {
     }
   });
 
-  watch(brushWidth, () => {
+  watch(fillColor, () => {
     if (paintingCanvasCtx.value && previewCanvasCtx.value) {
-      paintingCanvasCtx.value.lineWidth = Number(brushWidth.value);
+      paintingCanvasCtx.value.fillStyle = fillColor.value;
 
-      previewCanvasCtx.value.lineWidth = Number(brushWidth.value);
+      previewCanvasCtx.value.fillStyle = fillColor.value;
     }
   });
 
@@ -266,8 +276,9 @@ export default function usePaint() {
   return {
     paintingCanvas,
     previewCanvas,
-    fillColor: brushColor,
     brushWidth,
+    brushColor,
+    fillColor,
     activeToolBtn,
     cleanCanvas,
     onClickDown,

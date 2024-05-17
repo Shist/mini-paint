@@ -109,7 +109,7 @@
             Brush color:
           </label>
           <input
-            v-model="fillColor"
+            v-model="brushColor"
             type="color"
             name="brush-color"
             class="new-painting-page__color-input"

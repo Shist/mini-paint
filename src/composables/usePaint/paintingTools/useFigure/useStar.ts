@@ -37,6 +37,7 @@ export default function useStar() {
 
     ctx.value?.closePath();
     ctx.value?.stroke();
+    ctx.value?.fill();
   };
 
   return { drawStar };
