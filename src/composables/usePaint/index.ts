@@ -266,7 +266,7 @@ export default function usePaint() {
   return {
     paintingCanvas,
     previewCanvas,
-    brushColor,
+    fillColor: brushColor,
     brushWidth,
     activeToolBtn,
     cleanCanvas,

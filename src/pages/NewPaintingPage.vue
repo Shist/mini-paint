@@ -22,18 +22,77 @@
         @touchend.prevent="onClickUp"
       ></canvas>
       <div class="new-painting-page__tools-wrapper">
-        <div class="new-painting-page__brush-color-wrapper">
-          <button
-            class="new-painting-page__clean-btn"
-            @click="cleanCanvas"
-          ></button>
-          <input
-            v-model="brushColor"
-            type="color"
-            name="brush-color"
-            class="new-painting-page__brush-color-input"
-            id="brushColorInput"
-          />
+        <div class="new-painting-page__btns-wrapper">
+          <div class="new-painting-page__clean-btns-wrapper">
+            <button
+              class="new-painting-page__clean-btn new-painting-page__clean-btn_all"
+              @click="cleanCanvas"
+            ></button>
+            <button
+              class="new-painting-page__clean-btn new-painting-page__clean-btn_undo"
+            ></button>
+          </div>
+          <div class="new-painting-page__tools-btns-wrapper">
+            <button
+              class="new-painting-page__tool-btn new-painting-page__tool-btn_brush"
+              :id="PAINT_TOOL_BTN_TYPES.BRUSH"
+              :class="{
+                'active-tool-btn': activeToolBtn === PAINT_TOOL_BTN_TYPES.BRUSH,
+              }"
+              @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.BRUSH"
+            ></button>
+            <button
+              class="new-painting-page__tool-btn new-painting-page__tool-btn_line"
+              :id="PAINT_TOOL_BTN_TYPES.LINE"
+              :class="{
+                'active-tool-btn': activeToolBtn === PAINT_TOOL_BTN_TYPES.LINE,
+              }"
+              @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.LINE"
+            ></button>
+            <button
+              class="new-painting-page__tool-btn new-painting-page__tool-btn_circle"
+              :id="PAINT_TOOL_BTN_TYPES.ELLIPSE"
+              :class="{
+                'active-tool-btn':
+                  activeToolBtn === PAINT_TOOL_BTN_TYPES.ELLIPSE,
+              }"
+              @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.ELLIPSE"
+            ></button>
+            <button
+              class="new-painting-page__tool-btn new-painting-page__tool-btn_rectangle"
+              :id="PAINT_TOOL_BTN_TYPES.RECTANGLE"
+              :class="{
+                'active-tool-btn':
+                  activeToolBtn === PAINT_TOOL_BTN_TYPES.RECTANGLE,
+              }"
+              @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.RECTANGLE"
+            ></button>
+            <button
+              class="new-painting-page__tool-btn new-painting-page__tool-btn_star"
+              :id="PAINT_TOOL_BTN_TYPES.STAR"
+              :class="{
+                'active-tool-btn': activeToolBtn === PAINT_TOOL_BTN_TYPES.STAR,
+              }"
+              @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.STAR"
+            ></button>
+            <button
+              class="new-painting-page__tool-btn new-painting-page__tool-btn_polygon"
+              :id="PAINT_TOOL_BTN_TYPES.POLYGON"
+              :class="{
+                'active-tool-btn':
+                  activeToolBtn === PAINT_TOOL_BTN_TYPES.POLYGON,
+              }"
+              @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.POLYGON"
+            ></button>
+          </div>
+        </div>
+        <div class="new-paintings-page__input-pickers-wrapper">
+          <label
+            for="brushWidthInput"
+            class="new-painting-page__input-picker-label"
+          >
+            Brush thickness:
+          </label>
           <input
             v-model="brushWidth"
             type="range"
@@ -43,57 +102,32 @@
             class="new-painting-page__brush-width-input"
             id="brushWidthInput"
           />
-          <button
-            class="new-painting-page__brush-btn"
-            :id="PAINT_TOOL_BTN_TYPES.BRUSH"
-            :class="{
-              'active-tool-btn': activeToolBtn === PAINT_TOOL_BTN_TYPES.BRUSH,
-            }"
-            @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.BRUSH"
-          ></button>
-        </div>
-        <div class="new-painting-page__shapes-wrapper">
-          <button
-            class="new-painting-page__shape-btn new-painting-page__shape-btn_line"
-            :id="PAINT_TOOL_BTN_TYPES.LINE"
-            :class="{
-              'active-tool-btn': activeToolBtn === PAINT_TOOL_BTN_TYPES.LINE,
-            }"
-            @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.LINE"
-          ></button>
-          <button
-            class="new-painting-page__shape-btn new-painting-page__shape-btn_circle"
-            :id="PAINT_TOOL_BTN_TYPES.ELLIPSE"
-            :class="{
-              'active-tool-btn': activeToolBtn === PAINT_TOOL_BTN_TYPES.ELLIPSE,
-            }"
-            @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.ELLIPSE"
-          ></button>
-          <button
-            class="new-painting-page__shape-btn new-painting-page__shape-btn_rectangle"
-            :id="PAINT_TOOL_BTN_TYPES.RECTANGLE"
-            :class="{
-              'active-tool-btn':
-                activeToolBtn === PAINT_TOOL_BTN_TYPES.RECTANGLE,
-            }"
-            @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.RECTANGLE"
-          ></button>
-          <button
-            class="new-painting-page__shape-btn new-painting-page__shape-btn_star"
-            :id="PAINT_TOOL_BTN_TYPES.STAR"
-            :class="{
-              'active-tool-btn': activeToolBtn === PAINT_TOOL_BTN_TYPES.STAR,
-            }"
-            @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.STAR"
-          ></button>
-          <button
-            class="new-painting-page__shape-btn new-painting-page__shape-btn_polygon"
-            :id="PAINT_TOOL_BTN_TYPES.POLYGON"
-            :class="{
-              'active-tool-btn': activeToolBtn === PAINT_TOOL_BTN_TYPES.POLYGON,
-            }"
-            @click="activeToolBtn = PAINT_TOOL_BTN_TYPES.POLYGON"
-          ></button>
+          <label
+            for="brushColorInput"
+            class="new-painting-page__input-picker-label"
+          >
+            Brush color:
+          </label>
+          <input
+            v-model="fillColor"
+            type="color"
+            name="brush-color"
+            class="new-painting-page__color-input"
+            id="brushColorInput"
+          />
+          <label
+            for="fillColorInput"
+            class="new-painting-page__input-picker-label"
+          >
+            Shapes fill color:
+          </label>
+          <input
+            v-model="fillColor"
+            type="color"
+            name="fill-color"
+            class="new-painting-page__color-input"
+            id="fillColorInput"
+          />
         </div>
       </div>
     </div>
@@ -243,100 +277,114 @@ export default defineComponent({
     }
     .new-painting-page__tools-wrapper {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      gap: 20px;
-      @media (max-width: $tablet-m) {
-        flex-direction: column;
-      }
-      .new-painting-page__brush-color-wrapper {
+      row-gap: 10px;
+      .new-painting-page__btns-wrapper {
         display: flex;
         align-items: center;
-        column-gap: 10px;
-        @media (max-width: $phone-m) {
+        column-gap: 30px;
+        @media (max-width: $phone-l) {
+          flex-direction: column-reverse;
+          row-gap: 10px;
+        }
+        .new-painting-page__clean-btns-wrapper {
+          display: flex;
+          align-items: center;
           column-gap: 8px;
-        }
-        .new-painting-page__clean-btn {
-          width: 45px;
-          height: 45px;
-          background: transparent var(--canvas-clean-btn-img) no-repeat center /
-            cover;
-          cursor: pointer;
-          transition: 0.3s;
-          &:hover {
-            transform: scale(1.05);
-            box-shadow: 2px 4px 4px 0 rgba(var(--canvas-btn-shadow-rgb), 0.3);
+          .new-painting-page__clean-btn {
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            transition: 0.3s;
+            &:hover {
+              transform: scale(1.05);
+              box-shadow: 2px 4px 4px 0 rgba(var(--canvas-btn-shadow-rgb), 0.3);
+            }
+            @media (max-width: $tablet-s) {
+              height: 40px;
+              width: 40px;
+            }
+            &_all {
+              background: transparent var(--canvas-clean-btn-img) no-repeat
+                center / cover;
+            }
+            &_undo {
+              background: transparent var(--canvas-undo-btn-img) no-repeat
+                center / cover;
+            }
           }
-          @media (max-width: $tablet-s) {
-            height: 40px;
-            width: 40px;
+        }
+        .new-painting-page__tools-btns-wrapper {
+          display: flex;
+          align-items: center;
+          column-gap: 8px;
+          .new-painting-page__tool-btn {
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            transition: 0.3s;
+            &:hover {
+              transform: scale(1.05);
+              box-shadow: 2px 4px 4px 0 rgba(var(--canvas-btn-shadow-rgb), 0.3);
+            }
+            @media (max-width: $tablet-s) {
+              height: 40px;
+              width: 40px;
+            }
+            @media (max-width: $phone-m) {
+              height: 35px;
+              width: 35px;
+            }
+            &_brush {
+              background: transparent var(--canvas-tool-brush-img) no-repeat
+                center / cover;
+            }
+            &_line {
+              background: transparent var(--canvas-tool-line-img) no-repeat
+                center / cover;
+            }
+            &_circle {
+              background: transparent var(--canvas-tool-circle-img) no-repeat
+                center / cover;
+            }
+            &_rectangle {
+              background: transparent var(--canvas-tool-rectangular-img)
+                no-repeat center / cover;
+            }
+            &_star {
+              background: transparent var(--canvas-tool-star-img) no-repeat
+                center / cover;
+            }
+            &_polygon {
+              background: transparent var(--canvas-tool-polygon-img) no-repeat
+                center / cover;
+            }
           }
         }
-        .new-painting-page__brush-color-input {
-          width: 70px;
-          height: 40px;
-          @media (max-width: $phone-m) {
-            width: 50px;
+      }
+      .new-paintings-page__input-pickers-wrapper {
+        display: grid;
+        align-items: center;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px 5px;
+        grid-template-rows: repeat(3, auto);
+        .new-painting-page__input-picker-label {
+          @include default-text(24px, 24px, var(--color-text));
+          text-align: end;
+          @media (max-width: $phone-l) {
+            font-size: 16px;
+            line-height: 16px;
           }
         }
         .new-painting-page__brush-width-input {
           width: 100px;
           height: 30px;
         }
-        .new-painting-page__brush-btn {
-          width: 45px;
-          height: 45px;
-          background: transparent var(--canvas-tool-brush-img) no-repeat center /
-            cover;
-          cursor: pointer;
-          transition: 0.3s;
-          &:hover {
-            transform: scale(1.05);
-            box-shadow: 2px 4px 4px 0 rgba(var(--canvas-btn-shadow-rgb), 0.3);
-          }
-          @media (max-width: $tablet-s) {
-            height: 40px;
-            width: 40px;
-          }
-        }
-      }
-      .new-painting-page__shapes-wrapper {
-        display: flex;
-        align-items: center;
-        column-gap: 8px;
-        .new-painting-page__shape-btn {
-          width: 45px;
-          height: 45px;
-          cursor: pointer;
-          transition: 0.3s;
-          &:hover {
-            transform: scale(1.05);
-            box-shadow: 2px 4px 4px 0 rgba(var(--canvas-btn-shadow-rgb), 0.3);
-          }
-          @media (max-width: $tablet-s) {
-            height: 40px;
-            width: 40px;
-          }
-          &_line {
-            background: transparent var(--canvas-tool-line-img) no-repeat center /
-              cover;
-          }
-          &_circle {
-            background: transparent var(--canvas-tool-circle-img) no-repeat
-              center / cover;
-          }
-          &_rectangle {
-            background: transparent var(--canvas-tool-rectangular-img) no-repeat
-              center / cover;
-          }
-          &_star {
-            background: transparent var(--canvas-tool-star-img) no-repeat center /
-              cover;
-          }
-          &_polygon {
-            background: transparent var(--canvas-tool-polygon-img) no-repeat
-              center / cover;
-          }
+        .new-painting-page__color-input,
+        .new-painting-page__color-input {
+          width: 70px;
+          height: 40px;
         }
       }
     }
