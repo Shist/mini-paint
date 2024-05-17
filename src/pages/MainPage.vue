@@ -16,8 +16,8 @@
       />
     </div>
     <div class="main-page__btns-wrapper">
-      <button class="main-page__refresh-btn" @click="loadFirstPaintings">
-        Refresh
+      <button class="main-page__update-btn" @click="loadFirstPaintings">
+        Update
       </button>
       <button
         class="main-page__show-filters-btn"
@@ -174,7 +174,7 @@ export default defineComponent({
       padding: 5px;
       column-gap: 5px;
     }
-    .main-page__refresh-btn {
+    .main-page__update-btn {
       @include default-btn(110px, var(--color-btn-text), var(--color-btn-bg));
       text-decoration: none;
     }
