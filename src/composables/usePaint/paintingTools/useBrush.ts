@@ -1,5 +1,6 @@
 import { Ref } from "vue";
 import usePosition from "@/composables/usePaint/usePosition";
+import { MAX_PAINTING_HISTORY_LENGTH } from "@/constants";
 
 export default function useBrush(
   paintingHistory: ImageData[],
@@ -36,7 +37,12 @@ export default function useBrush(
         paintingCanvas.value ? paintingCanvas.value?.width : 0,
         paintingCanvas.value ? paintingCanvas.value?.height : 0
       );
+
       paintingHistory.push(currentCanvasState);
+
+      if (paintingHistory.length > MAX_PAINTING_HISTORY_LENGTH) {
+        paintingHistory.shift();
+      }
     }
   };
 

@@ -16,7 +16,7 @@ export default function usePaint() {
 
   const paintingHistory = reactive<ImageData[]>([]);
 
-  const brushWidth = ref("5");
+  const brushWidth = ref("10");
   const brushColor = ref("#000000");
   const fillColor = ref("#ffffff");
   const activeToolBtn = ref(PAINT_TOOL_BTN_TYPES.BRUSH);
@@ -149,12 +149,27 @@ export default function usePaint() {
     canvasCtx.value.fillStyle = fillColor.value;
   };
 
+  const pushCleanCanvasStateToHistory = () => {
+    if (paintingCanvasCtx.value) {
+      const currentCanvasState = paintingCanvasCtx.value.getImageData(
+        0,
+        0,
+        paintingCanvas.value ? paintingCanvas.value?.width : 0,
+        paintingCanvas.value ? paintingCanvas.value?.height : 0
+      );
+
+      paintingHistory.push(currentCanvasState);
+    }
+  };
+
   onMounted(() => {
     window.addEventListener("mouseup", handleMouseUpOutsideCanvas);
 
     initCanvasSettings(paintingCanvas, paintingCanvasCtx, true);
 
     initCanvasSettings(previewCanvas, previewCanvasCtx, false);
+
+    pushCleanCanvasStateToHistory();
   });
 
   onUnmounted(() => {
@@ -202,21 +217,19 @@ export default function usePaint() {
       paintingCanvas.value ? paintingCanvas.value?.width : 0,
       paintingCanvas.value ? paintingCanvas.value?.height : 0
     );
+
+    pushCleanCanvasStateToHistory();
   };
 
   const cleanLastPainting = (e: MouseEvent) => {
     polygonEndDrawing(e);
 
-    if (paintingHistory.length && paintingCanvasCtx.value) {
+    if (paintingHistory.length > 1 && paintingCanvasCtx.value) {
       paintingHistory.pop();
 
-      if (paintingHistory.length) {
-        const currPaintingState = paintingHistory[paintingHistory.length - 1];
+      const currPaintingState = paintingHistory[paintingHistory.length - 1];
 
-        paintingCanvasCtx.value.putImageData(currPaintingState, 0, 0);
-      } else {
-        cleanCanvas(e);
-      }
+      paintingCanvasCtx.value.putImageData(currPaintingState, 0, 0);
     }
   };
 

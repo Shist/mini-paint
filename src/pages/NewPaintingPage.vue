@@ -98,7 +98,7 @@
             v-model="brushWidth"
             type="range"
             min="1"
-            max="10"
+            max="30"
             name="brush-width"
             class="new-painting-page__brush-width-input"
             id="brushWidthInput"
