@@ -140,6 +140,7 @@ export default defineComponent({
       margin-bottom: 40px;
     }
     .sign-in-page__confirm-btn {
+      align-self: center;
       @include default-btn(300px, var(--color-btn-text), var(--color-btn-bg));
       margin-bottom: 20px;
     }
