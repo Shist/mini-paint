@@ -2,6 +2,7 @@ import { Ref } from "vue";
 import usePosition from "@/composables/usePaint/usePosition";
 
 export default function useBrush(
+  paintingHistory: ImageData[],
   paintingCanvas: Ref<HTMLCanvasElement | null>,
   paintingCanvasCtx: Ref<CanvasRenderingContext2D | null>
 ) {
@@ -27,6 +28,16 @@ export default function useBrush(
   const brushEndDrawing = () => {
     isDrawing = false;
     paintingCanvasCtx.value?.closePath();
+
+    if (paintingCanvasCtx.value) {
+      const currentCanvasState = paintingCanvasCtx.value.getImageData(
+        0,
+        0,
+        paintingCanvas.value ? paintingCanvas.value?.width : 0,
+        paintingCanvas.value ? paintingCanvas.value?.height : 0
+      );
+      paintingHistory.push(currentCanvasState);
+    }
   };
 
   const brushStopDrawing = () => {

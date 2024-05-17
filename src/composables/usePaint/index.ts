@@ -1,4 +1,4 @@
-import { ref, Ref, onMounted, onUnmounted, watch } from "vue";
+import { ref, reactive, Ref, onMounted, onUnmounted, watch } from "vue";
 import { PAINT_TOOL_BTN_TYPES } from "@/constants";
 import useBrush from "@/composables/usePaint/paintingTools/useBrush";
 import useFigure from "@/composables/usePaint/paintingTools/useFigure";
@@ -14,9 +14,11 @@ export default function usePaint() {
   const previewCanvas = ref(null) as Ref<HTMLCanvasElement | null>;
   const previewCanvasCtx = ref(null) as Ref<CanvasRenderingContext2D | null>;
 
+  const paintingHistory = reactive<ImageData[]>([]);
+
   const brushWidth = ref("5");
   const brushColor = ref("#000000");
-  const fillColor = ref("#000000");
+  const fillColor = ref("#ffffff");
   const activeToolBtn = ref(PAINT_TOOL_BTN_TYPES.BRUSH);
 
   const {
@@ -26,7 +28,7 @@ export default function usePaint() {
     brushResumeDrawing,
     brushDraw,
     brushCancelDrawingStopping,
-  } = useBrush(paintingCanvas, paintingCanvasCtx);
+  } = useBrush(paintingHistory, paintingCanvas, paintingCanvasCtx);
 
   const { drawLine } = useLine();
   const {
@@ -34,6 +36,7 @@ export default function usePaint() {
     figureDrawPreview: lineDrawPreview,
     figureEndDrawing: lineEndDrawing,
   } = useFigure(
+    paintingHistory,
     paintingCanvas,
     paintingCanvasCtx,
     previewCanvas,
@@ -47,6 +50,7 @@ export default function usePaint() {
     figureDrawPreview: ellipseDrawPreview,
     figureEndDrawing: ellipseEndDrawing,
   } = useFigure(
+    paintingHistory,
     paintingCanvas,
     paintingCanvasCtx,
     previewCanvas,
@@ -60,6 +64,7 @@ export default function usePaint() {
     figureDrawPreview: rectangleDrawPreview,
     figureEndDrawing: rectangleEndDrawing,
   } = useFigure(
+    paintingHistory,
     paintingCanvas,
     paintingCanvasCtx,
     previewCanvas,
@@ -73,6 +78,7 @@ export default function usePaint() {
     figureDrawPreview: starDrawPreview,
     figureEndDrawing: starEndDrawing,
   } = useFigure(
+    paintingHistory,
     paintingCanvas,
     paintingCanvasCtx,
     previewCanvas,
@@ -86,6 +92,7 @@ export default function usePaint() {
     polygonEndDrawing,
     polygonEndAllDrawing,
   } = usePolygon(
+    paintingHistory,
     paintingCanvas,
     paintingCanvasCtx,
     previewCanvas,
@@ -117,7 +124,8 @@ export default function usePaint() {
 
   const initCanvasSettings = (
     canvas: Ref<HTMLCanvasElement | null>,
-    canvasCtx: Ref<CanvasRenderingContext2D | null>
+    canvasCtx: Ref<CanvasRenderingContext2D | null>,
+    isReadFrequently: boolean
   ) => {
     if (!canvas.value) {
       return;
@@ -127,7 +135,9 @@ export default function usePaint() {
     canvas.value.width = canvasRect.width;
     canvas.value.height = canvasRect.height;
 
-    canvasCtx.value = canvas.value.getContext("2d");
+    canvasCtx.value = canvas.value.getContext("2d", {
+      willReadFrequently: isReadFrequently,
+    });
 
     if (!canvasCtx.value) {
       return;
@@ -142,9 +152,9 @@ export default function usePaint() {
   onMounted(() => {
     window.addEventListener("mouseup", handleMouseUpOutsideCanvas);
 
-    initCanvasSettings(paintingCanvas, paintingCanvasCtx);
+    initCanvasSettings(paintingCanvas, paintingCanvasCtx, true);
 
-    initCanvasSettings(previewCanvas, previewCanvasCtx);
+    initCanvasSettings(previewCanvas, previewCanvasCtx, false);
   });
 
   onUnmounted(() => {
@@ -184,12 +194,30 @@ export default function usePaint() {
   const cleanCanvas = (e: MouseEvent) => {
     polygonEndDrawing(e);
 
+    paintingHistory.splice(0, paintingHistory.length);
+
     paintingCanvasCtx.value?.clearRect(
       0,
       0,
       paintingCanvas.value ? paintingCanvas.value?.width : 0,
       paintingCanvas.value ? paintingCanvas.value?.height : 0
     );
+  };
+
+  const cleanLastPainting = (e: MouseEvent) => {
+    polygonEndDrawing(e);
+
+    if (paintingHistory.length && paintingCanvasCtx.value) {
+      paintingHistory.pop();
+
+      if (paintingHistory.length) {
+        const currPaintingState = paintingHistory[paintingHistory.length - 1];
+
+        paintingCanvasCtx.value.putImageData(currPaintingState, 0, 0);
+      } else {
+        cleanCanvas(e);
+      }
+    }
   };
 
   const onClickDown = (e: MouseEvent | TouchEvent) => {
@@ -281,6 +309,7 @@ export default function usePaint() {
     fillColor,
     activeToolBtn,
     cleanCanvas,
+    cleanLastPainting,
     onClickDown,
     onMove,
     onClickUp,

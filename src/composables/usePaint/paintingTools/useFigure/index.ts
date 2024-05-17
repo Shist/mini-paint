@@ -9,6 +9,7 @@ export type DrawFigureFunction = (
 ) => void;
 
 export default function useFigure(
+  paintingHistory: ImageData[],
   paintingCanvas: Ref<HTMLCanvasElement | null>,
   paintingCanvasCtx: Ref<CanvasRenderingContext2D | null>,
   previewCanvas: Ref<HTMLCanvasElement | null>,
@@ -49,6 +50,16 @@ export default function useFigure(
     drawFigure(paintingCanvasCtx, startPosition, getPosition(e));
 
     isStartSet = false;
+
+    if (paintingCanvasCtx.value) {
+      const currentCanvasState = paintingCanvasCtx.value.getImageData(
+        0,
+        0,
+        paintingCanvas.value ? paintingCanvas.value?.width : 0,
+        paintingCanvas.value ? paintingCanvas.value?.height : 0
+      );
+      paintingHistory.push(currentCanvasState);
+    }
   };
 
   return {

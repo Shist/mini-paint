@@ -3,6 +3,7 @@ import usePosition from "@/composables/usePaint/usePosition";
 import useClearPreview from "@/composables/usePaint/useClearPreview";
 
 export default function usePolygon(
+  paintingHistory: ImageData[],
   paintingCanvas: Ref<HTMLCanvasElement | null>,
   paintingCanvasCtx: Ref<CanvasRenderingContext2D | null>,
   previewCanvas: Ref<HTMLCanvasElement | null>,
@@ -86,10 +87,24 @@ export default function usePolygon(
   };
 
   const polygonEndAllDrawing = () => {
+    if (!isStartSet) {
+      return;
+    }
+
     drawPolygonPart(paintingCanvasCtx);
 
     isStartSet = false;
     isClickDouble = false;
+
+    if (paintingCanvasCtx.value) {
+      const currentCanvasState = paintingCanvasCtx.value.getImageData(
+        0,
+        0,
+        paintingCanvas.value ? paintingCanvas.value?.width : 0,
+        paintingCanvas.value ? paintingCanvas.value?.height : 0
+      );
+      paintingHistory.push(currentCanvasState);
+    }
   };
 
   return {

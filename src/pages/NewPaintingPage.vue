@@ -30,6 +30,7 @@
             ></button>
             <button
               class="new-painting-page__clean-btn new-painting-page__clean-btn_undo"
+              @click="cleanLastPainting"
             ></button>
           </div>
           <div class="new-painting-page__tools-btns-wrapper">
