@@ -18,7 +18,8 @@ export default function usePaint() {
 
   const brushWidth = ref("10");
   const brushColor = ref("#000000");
-  const fillColor = ref("#ffffff");
+  const isFillEnabled = ref(true);
+  const fillColor = ref("#000000");
   const activeToolBtn = ref(PAINT_TOOL_BTN_TYPES.BRUSH);
 
   const {
@@ -44,7 +45,7 @@ export default function usePaint() {
     drawLine
   );
 
-  const { drawEllipse } = useEllipse();
+  const { drawEllipse } = useEllipse(isFillEnabled);
   const {
     figureStartDrawing: ellipseStartDrawing,
     figureDrawPreview: ellipseDrawPreview,
@@ -58,7 +59,7 @@ export default function usePaint() {
     drawEllipse
   );
 
-  const { drawRectangle } = useRectangle();
+  const { drawRectangle } = useRectangle(isFillEnabled);
   const {
     figureStartDrawing: rectangleStartDrawing,
     figureDrawPreview: rectangleDrawPreview,
@@ -72,7 +73,7 @@ export default function usePaint() {
     drawRectangle
   );
 
-  const { drawStar } = useStar();
+  const { drawStar } = useStar(isFillEnabled);
   const {
     figureStartDrawing: starStartDrawing,
     figureDrawPreview: starDrawPreview,
@@ -319,6 +320,7 @@ export default function usePaint() {
     previewCanvas,
     brushWidth,
     brushColor,
+    isFillEnabled,
     fillColor,
     activeToolBtn,
     cleanCanvas,

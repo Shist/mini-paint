@@ -1,6 +1,7 @@
+import { Ref } from "vue";
 import { DrawFigureFunction } from "@/composables/usePaint/paintingTools/useFigure";
 
-export default function useEllipse() {
+export default function useEllipse(isFillEnabled: Ref<boolean>) {
   const drawEllipse: DrawFigureFunction = (ctx, startPosition, newPosition) => {
     const radiusX = Math.abs((newPosition.x - startPosition.x) / 2);
     const radiusY = Math.abs((newPosition.y - startPosition.y) / 2);
@@ -20,7 +21,7 @@ export default function useEllipse() {
       2 * Math.PI
     );
     ctx.value?.stroke();
-    ctx.value?.fill();
+    if (isFillEnabled.value) ctx.value?.fill();
     ctx.value?.closePath();
   };
 

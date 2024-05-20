@@ -10,6 +10,7 @@
         type="checkbox"
         class="theme-switch__input"
         id="theme-switch"
+        aria-hidden="true"
         :checked="theme === 'dark'"
         @change="
           theme === 'dark' ? setCurrTheme('light') : setCurrTheme('dark')
@@ -62,7 +63,7 @@ export default defineComponent({
       &:checked + .theme-switch__slider {
         background-color: var(--color-theme-slider-dark);
       }
-      &:checked + .theme-switch__slider:before {
+      &:checked + .theme-switch__slider::before {
         transform: translateX(26px);
       }
     }

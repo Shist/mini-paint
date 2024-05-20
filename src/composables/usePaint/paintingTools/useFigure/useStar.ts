@@ -1,6 +1,7 @@
+import { Ref } from "vue";
 import { DrawFigureFunction } from "@/composables/usePaint/paintingTools/useFigure";
 
-export default function useStar() {
+export default function useStar(isFillEnabled: Ref<boolean>) {
   const drawStar: DrawFigureFunction = (ctx, startPosition, newPosition) => {
     const radiusX = Math.abs((newPosition.x - startPosition.x) / 2);
     const radiusY = Math.abs((newPosition.y - startPosition.y) / 2);
@@ -37,7 +38,7 @@ export default function useStar() {
 
     ctx.value?.closePath();
     ctx.value?.stroke();
-    ctx.value?.fill();
+    if (isFillEnabled.value) ctx.value?.fill();
   };
 
   return { drawStar };

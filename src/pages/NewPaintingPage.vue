@@ -117,6 +117,26 @@
             id="brushColorInput"
           />
           <label
+            for="fill-bg-switch"
+            class="new-painting-page__input-picker-label"
+          >
+            Enable shapes fill:
+          </label>
+          <label
+            for="fill-bg-switch"
+            class="new-painting-page__fill-bg-wrapper"
+          >
+            <input
+              type="checkbox"
+              class="new-painting-page__fill-bg-checkbox"
+              id="fill-bg-switch"
+              aria-hidden="true"
+              :checked="isFillEnabled"
+              @change="isFillEnabled = !isFillEnabled"
+            />
+            <div class="new-painting-page__fill-bg-checkbox-slider"></div>
+          </label>
+          <label
             for="fillColorInput"
             class="new-painting-page__input-picker-label"
           >
@@ -369,13 +389,53 @@ export default defineComponent({
         align-items: center;
         grid-template-columns: 1fr 1fr;
         gap: 10px 5px;
-        grid-template-rows: repeat(3, auto);
+        grid-template-rows: repeat(4, auto);
         .new-painting-page__input-picker-label {
           @include default-text(24px, 24px, var(--color-text));
           text-align: end;
           @media (max-width: $phone-l) {
             font-size: 16px;
             line-height: 16px;
+          }
+          @media (max-width: $phone-m) {
+            font-size: 14px;
+            line-height: 14px;
+          }
+        }
+        .new-painting-page__fill-bg-wrapper {
+          position: relative;
+          width: 60px;
+          height: 34px;
+          .new-painting-page__fill-bg-checkbox {
+            display: none;
+            &:checked + .new-painting-page__fill-bg-checkbox-slider {
+              background-color: var(--color-theme-slider-dark);
+            }
+            &:checked + .new-painting-page__fill-bg-checkbox-slider::before {
+              transform: translateX(26px);
+            }
+          }
+          .new-painting-page__fill-bg-checkbox-slider {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            cursor: pointer;
+            background-color: var(--color-theme-slider-light);
+            border-radius: 34px;
+            transition: 0.4s;
+            &::before {
+              content: "";
+              height: 26px;
+              width: 26px;
+              position: absolute;
+              bottom: 4px;
+              left: 4px;
+              background-color: var(--color-theme-slider-circle);
+              border-radius: 50%;
+              transition: 0.4s;
+            }
           }
         }
         .new-painting-page__brush-width-input {

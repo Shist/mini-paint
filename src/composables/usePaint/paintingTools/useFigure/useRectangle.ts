@@ -1,6 +1,7 @@
+import { Ref } from "vue";
 import { DrawFigureFunction } from "@/composables/usePaint/paintingTools/useFigure";
 
-export default function useRectangle() {
+export default function useRectangle(isFillEnabled: Ref<boolean>) {
   const drawRectangle: DrawFigureFunction = (
     ctx,
     startPosition,
@@ -17,7 +18,7 @@ export default function useRectangle() {
       rectangleHeight
     );
     ctx.value?.stroke();
-    ctx.value?.fill();
+    if (isFillEnabled.value) ctx.value?.fill();
     ctx.value?.closePath();
   };
 
