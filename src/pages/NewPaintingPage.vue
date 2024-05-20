@@ -131,6 +131,7 @@
               class="new-painting-page__fill-bg-checkbox"
               id="fill-bg-switch"
               aria-hidden="true"
+              aria-label="Enable shapes fill"
               :checked="isFillEnabled"
               @change="isFillEnabled = !isFillEnabled"
             />

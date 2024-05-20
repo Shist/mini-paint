@@ -11,6 +11,7 @@
         class="theme-switch__input"
         id="theme-switch"
         aria-hidden="true"
+        aria-label="Change color theme"
         :checked="theme === 'dark'"
         @change="
           theme === 'dark' ? setCurrTheme('light') : setCurrTheme('dark')
