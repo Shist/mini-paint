@@ -1,0 +1,117 @@
+@import "@/styles/vars";
+@import "@/styles/templates";
+@import "@/styles/mixins";
+
+// Global variables of the app
+:root {
+  color-scheme: light;
+
+  --color-global-bg: #ececec;
+  --color-wrapper-bg: #ffffff;
+  --color-painting-card-bg: #eeeeee;
+
+  --color-text: #000000;
+  --color-input-bg: #ffffff;
+  --color-input-borders: #000000;
+  --color-placeholder: #777777;
+
+  --color-btn-text: #ffffff;
+  --color-btn-bg: #ff611a;
+  --color-filter-btn-bg: #6cb4ee;
+
+  --burger-menu-btn-img: url("@/assets/icons/burger-btn-black.svg");
+  --color-burger-menu-bg: #ffffff;
+  --color-burger-menu-text: #000000;
+  --color-burger-menu-link-borders: #000000;
+  --color-burger-menu-link: #c49500;
+  --color-burger-menu-back-bg-rgb: 0, 0, 0;
+
+  --color-toast-bg: #ffffff;
+  --color-toast-text: #000000;
+
+  --color-canvas-bg: #eeeeee;
+  --color-canvas-borders: #000000;
+  --canvas-clean-btn-img: url("@/assets/icons/broom-black.svg");
+  --canvas-undo-btn-img: url("@/assets/icons/undo-black.svg");
+  --canvas-tool-brush-img: url("@/assets/icons/brush-black.svg");
+  --canvas-tool-line-img: url("@/assets/icons/line-black.svg");
+  --canvas-tool-circle-img: url("@/assets/icons/circle-black.svg");
+  --canvas-tool-rectangular-img: url("@/assets/icons/rectangle-black.svg");
+  --canvas-tool-star-img: url("@/assets/icons/star-black.svg");
+  --canvas-tool-polygon-img: url("@/assets/icons/polygon-black.svg");
+  --color-canvas-active-tool-btn: #ffeb3b;
+  --canvas-btn-shadow-rgb: 0, 0, 0;
+
+  --color-skeleton-bg: #aaaaaa;
+
+  --color-theme-slider-dark: #2b2b2b;
+  --color-theme-slider-light: #cccccc;
+  --color-theme-slider-circle: #ffffff;
+
+  --color-success: #80ff80;
+  --color-error: #ff4040;
+}
+
+// Class for dark theme colors
+.dark-theme {
+  color-scheme: dark;
+
+  --color-global-bg: #313131;
+  --color-wrapper-bg: #000000;
+  --color-painting-card-bg: #111111;
+
+  --color-text: #ffffff;
+  --color-input-bg: #000000;
+  --color-input-borders: #ffffff;
+  --color-placeholder: #999999;
+
+  --burger-menu-btn-img: url("@/assets/icons/burger-btn-white.svg");
+  --color-burger-menu-bg: #000000;
+  --color-burger-menu-text: #ffffff;
+  --color-burger-menu-link-borders: #ffffff;
+  --color-burger-menu-link: #f7c832;
+  --color-burger-menu-back-bg-rgb: 255, 255, 255;
+
+  --color-toast-bg: #000000;
+  --color-toast-text: #ffffff;
+
+  --color-canvas-borders: #ffffff;
+  --canvas-clean-btn-img: url("@/assets/icons/broom-white.svg");
+  --canvas-undo-btn-img: url("@/assets/icons/undo-white.svg");
+  --canvas-tool-brush-img: url("@/assets/icons/brush-white.svg");
+  --canvas-tool-line-img: url("@/assets/icons/line-white.svg");
+  --canvas-tool-circle-img: url("@/assets/icons/circle-white.svg");
+  --canvas-tool-rectangular-img: url("@/assets/icons/rectangle-white.svg");
+  --canvas-tool-star-img: url("@/assets/icons/star-white.svg");
+  --canvas-tool-polygon-img: url("@/assets/icons/polygon-white.svg");
+  --color-canvas-active-tool-btn: #ffc107;
+  --canvas-btn-shadow-rgb: 255, 255, 255;
+
+  --color-skeleton-bg: #888888;
+}
+
+// Global container of whole page
+.global-container {
+  position: relative;
+  padding: 10px;
+  min-height: 100vh;
+  max-width: 1920px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-global-bg);
+}
+
+// Class which is needed to disable links while loading anything
+.disabled-link {
+  pointer-events: none;
+  filter: grayscale(50%);
+}
+
+// Class which is needed to highlight the active button of the painting tool
+.active-tool-btn {
+  transform: scale(1.05);
+  border: 2px solid var(--color-canvas-active-tool-btn);
+  box-shadow: 2px 4px 4px 0 rgba(var(--canvas-btn-shadow-rgb), 0.2);
+}
