@@ -145,6 +145,7 @@ export default function usePaint() {
     }
 
     canvasCtx.value.lineCap = "round";
+    canvasCtx.value.lineJoin = "round";
     canvasCtx.value.lineWidth = Number(brushWidth.value);
     canvasCtx.value.strokeStyle = brushColor.value;
     canvasCtx.value.fillStyle = fillColor.value;
