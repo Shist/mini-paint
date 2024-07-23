@@ -28,6 +28,8 @@ https://github.com/Shist/mini-paint/assets/40572268/3d5b5f22-c7aa-4d74-b670-bf9c
    `git clone https://github.com/Shist/mini-paint`
 1. Go to the app folder:
    `cd mini-paint`
+1. Install all needed dependencies:
+   `npm install`
 1. Next, you need to set the necessary variables in the .env file of the project (a template for this file is in the repository). You will need to insert your config settings for Firebase, as well as the name of your collection in the database and the name of the field for list of notes. You can find more detailed instructions in the [Firebase documentation](https://firebase.google.com/docs/web/setup?hl=en&authuser=2).
 1. Once you've finished setting up the environment variable (see above), you can run the project:
    `npm run serve`
